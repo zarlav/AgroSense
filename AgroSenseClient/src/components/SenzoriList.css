@@ -1,0 +1,53 @@
+.senzori {
+  width: 100%;
+}
+
+.senzori-loading {
+  color: #555;
+}
+
+.senzori-error {
+  color: red;
+}
+
+.senzori-table-wrapper {
+  overflow-x: auto;
+}
+
+.senzori-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.senzori-table th,
+.senzori-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.senzori-table th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+}
+
+.senzori-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.status.aktivan {
+  color: #16a34a;
+}
+
+.status.neaktivan {
+  color: #dc2626;
+}
+
+.status.odrzavanje {
+  color: #ca8a04;
+}

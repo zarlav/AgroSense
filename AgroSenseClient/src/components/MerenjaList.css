@@ -1,0 +1,74 @@
+.merenja {
+  width: 100%;
+}
+
+.merenja-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.merenja-input {
+  padding: 8px 12px;
+  width: 300px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.merenja-input:focus {
+  outline: none;
+  border-color: #2980b9;
+}
+
+.merenja-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background-color: #2980b9;
+  color: white;
+  font-size: 14px;
+}
+
+.merenja-btn:hover {
+  background-color: #1f6391;
+}
+
+.merenja-loading {
+  color: #555;
+}
+
+.merenja-error {
+  color: red;
+}
+
+.merenja-table-wrapper {
+  overflow-x: auto;
+}
+
+.merenja-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.merenja-table th {
+  background-color: #0f61e7; 
+  color: #f8fafc;             
+  font-weight: 600;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+}
+
+.merenja-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+
+.merenja-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
