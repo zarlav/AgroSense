@@ -1,0 +1,39 @@
+.kartice {
+  width: 100%;
+}
+
+.tab-nav {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+
+  border: 2px solid transparent;
+  background-color: #ddd;
+  color: black;
+
+  cursor: pointer;
+  box-sizing: border-box;
+
+  font-size: 16px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.tab-btn.active {
+  background-color: #2980b9;
+  color: white;
+}
+
+.tab-btn:hover {
+  background-color: #cbdcf0;
+}
+
+.tab-btn:focus-visible {
+  border-color: #1e40af;
+  outline: none;
+}

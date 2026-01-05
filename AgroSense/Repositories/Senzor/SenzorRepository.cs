@@ -42,6 +42,7 @@ namespace AgroSense.Repositories.Senzor
 
             return new SenzorResponseDto
             {
+                LokacijaId = row.GetValue<Guid>("id_lokacije"),
                 Naziv = row.GetValue<string>("naziv"),
                 Proizvodjac = row.GetValue<string>("proizvodjac"),
                 Model = row.GetValue<string>("model"),
@@ -52,16 +53,18 @@ namespace AgroSense.Repositories.Senzor
 
         public List<SenzorResponseDto> VratiSveSenzore()
         {
-            var stmt = new SimpleStatement(@"SELECT id_senzora, id_lokacije, naziv, status, vreme_instalacije FROM senzor");
+            var stmt = new SimpleStatement(@"SELECT id_senzora,id_lokacije, model, naziv,proizvodjac, status, vreme_instalacije FROM senzor");
             var rows = _session.Execute(stmt);
             var result = new List<SenzorResponseDto>();
             foreach (var row in rows)
             { 
                 result.Add(new SenzorResponseDto 
-                { 
+                {
+                    SenzorId = row.GetValue<Guid>("id_senzora"),
+                    LokacijaId = row.GetValue<Guid>("id_lokacije"),
+                    Model = row.GetValue<string>("model"), 
                     Naziv = row.GetValue<string>("naziv"), 
                     Proizvodjac = row.GetValue<string>("proizvodjac"), 
-                    Model = row.GetValue<string>("model"), 
                     Status = row.GetValue<string>("status"), 
                     VremeInstalacije = row.GetValue<DateTime>("vreme_instalacije") 
                 });
