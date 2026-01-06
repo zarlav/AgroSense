@@ -12,19 +12,14 @@ namespace AgroSense.Services
             _repo = repo;
         }
 
-        public void Dodaj(KorisnikCreateDto dto)
-        {
-            _repo.Dodaj(dto);
-        }
+        public void Dodaj(KorisnikCreateDto dto) => _repo.Dodaj(dto);
 
-        public List<KorisnikResponseDto> VratiSve()
-        {
-            return _repo.VratiSve();
-        }
+        public List<KorisnikResponseDto> VratiSve() => _repo.VratiSve();
 
-        public KorisnikViewDto? VratiPoId(Guid id)
-        {
-            return _repo.VratiPoId(id);
-        }
+        public KorisnikViewDto? VratiPoId(Guid id) => _repo.VratiPoId(id);
+
+        public void Update(Guid id, KorisnikCreateDto dto) => _repo.Update(id, dto);
+
+        public void Delete(Guid id) => _repo.Delete(id);
     }
 }
