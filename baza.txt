@@ -1,3 +1,187 @@
-Za ocenu 6
-birate sami tri lekcije od ovih tekstualnih, za pismeni za svaku napišete po jedan pasus, naučite napamet i to napišete na testu. Za usmeni treba sve te tri lecije cele da znate da čitate i prevodite. 
- 
+CREATE TABLE IF NOT EXISTS agrosense.proizvodne_jedinice (
+    id_jedinice UUID PRIMARY KEY,
+    naziv TEXT,
+    geo_lat DOUBLE,
+    geo_long DOUBLE,
+    tip_jedinice TEXT,
+    povrsina FLOAT,
+
+    granica_temp_min FLOAT,
+    granica_temp_max FLOAT,
+    granica_vlaznost_min FLOAT,
+    granica_vlaznost_max FLOAT,
+    granica_co2_min FLOAT,
+    granica_co2_max FLOAT,
+    granica_svetlost_min FLOAT,
+    granica_svetlost_max FLOAT,
+    granica_vlaznost_lista_min FLOAT,
+    granica_vlaznost_lista_max FLOAT,
+    granica_pritisak_vazduha_min FLOAT,
+    granica_pritisak_vazduha_max FLOAT,
+    granica_jacina_vetra_min FLOAT,
+    granica_jacina_vetra_max FLOAT,
+    granica_pritisak_u_cevima_min FLOAT,
+    granica_pritisak_u_cevima_max FLOAT,
+	 
+    vrsta_biljaka TEXT,
+    status_mreze TEXT,
+    nadmorska_visina DOUBLE,
+    odgovorno_lice TEXT,
+    opis TEXT,
+    datum_postavljanja timestamp,
+    aktivno boolean
+);
+
+
+//////////////////////ALARMI//////////////////////////////
+CREATE TABLE IF NOT EXISTS agrosense.alarmi (
+    id_jedinice UUID,
+    dan date,
+    vreme_dogadjaja timestamp,
+    id_alarma UUID,
+    id_senzora UUID,
+    tip_senzora TEXT,
+    parametar TEXT,
+    trenutna_vrednost DOUBLE,
+    granicna_vrednost DOUBLE,
+    stanje_pre TEXT,
+    stanje_posle TEXT,
+    prioritet TEXT,
+    komentar TEXT,
+    vreme_aktivacije TIMESTAMP,
+    automatizovana_akcija BOOLEAN,
+
+    PRIMARY KEY ((id_jedinice, dan), vreme_dogadjaja , id_senzora)
+)
+WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
+
+
+CREATE TABLE agrosense.alarmi_po_senzoru (
+    id_senzora UUID,
+    dan DATE,
+    vreme_dogadjaja TIMESTAMP,
+    id_jedinice UUID,
+    prioritet TEXT,
+    parametar TEXT,
+
+    PRIMARY KEY ((id_senzora, dan), vreme_dogadjaja)
+)
+WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
+
+CREATE TABLE agrosense.alarmi_po_prioritetu (
+    prioritet TEXT,
+    dan DATE,
+    vreme_dogadjaja TIMESTAMP,
+    id_jedinice UUID,
+    id_senzora UUID,
+    parametar TEXT,
+    trenutna_vrednost DOUBLE,
+
+    PRIMARY KEY ((prioritet, dan), vreme_dogadjaja, id_jedinice)
+)
+WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
+
+
+/////////////////////////KORISNIK//////////////////////
+CREATE TABLE agrosense.korisnik (
+    id_korisnika UUID PRIMARY KEY,
+    ime TEXT,
+    uloga TEXT,
+    kontakt TEXT,
+    aktivan BOOLEAN
+);
+CREATE TABLE agrosense.korisnik_po_jedinici (
+    id_jedinice UUID,
+    id_korisnika UUID,
+    uloga TEXT,
+    PRIMARY KEY (id_jedinice, id_korisnika)
+);
+
+
+
+///////////////////////// SENZORI//////////////////////
+
+CREATE TABLE IF NOT EXISTS agrosense.senzor_podatak_po_danu (
+    id_senzora UUID,
+    dan DATE,
+    ts TIMESTAMP,
+    temperatura FLOAT,
+    vlaznost FLOAT,
+    co2 FLOAT,
+    jacina_vetra FLOAT,
+    smer_vetra TEXT,
+    ph_zemljista FLOAT,
+    uv_vrednost FLOAT,
+    vlaznost_lista FLOAT,
+    pritisak_vazduha FLOAT,
+    pritisak_u_cevima FLOAT,
+
+    PRIMARY KEY((id_senzora , dan), ts)
+) WITH CLUSTERING ORDER BY (ts DESC);
+
+
+CREATE TABLE IF NOT EXISTS agrosense.senzor (
+    id_senzora UUID PRIMARY KEY,
+    id_lokacije UUID,
+    tip TEXT,
+    status TEXT
+);
+CREATE TABLE agrosense.senzor_health (
+    id_senzora UUID PRIMARY KEY,
+    last_seen TIMESTAMP,
+    battery_level INT,
+    signal_strength INT,
+    status TEXT
+);
+CREATE TABLE IF NOT EXISTS agrosense.senzor_po_lokaciji (
+    id_senzora UUID,
+    id_lokacije UUID,
+    tip TEXT,
+    status TEXT,
+    PRIMARY KEY(id_lokacije,id_senzora)
+);
+
+CREATE TABLE IF NOT EXISTS agrosense.senzor_podatak_po_vremenu (
+    id_senzora UUID,
+    id_lokacije UUID,
+    dan DATE,
+    ts TIMESTAMP,
+    temperatura FLOAT,
+    vlaznost FLOAT,
+    co2 FLOAT,
+    jacina_vetra FLOAT,
+    smer_vetra TEXT,
+    ph_zemljista FLOAT,
+    uv_vrednost FLOAT,
+    vlaznost_lista FLOAT,
+    pritisak_vazduha FLOAT,
+    pritisak_u_cevima FLOAT,
+
+    PRIMARY KEY ((dan,id_lokacije), ts, id_senzora)
+)WITH CLUSTERING ORDER BY (ts DESC);
+
+CREATE TABLE IF NOT EXISTS agrosense.senzor_poslednja_vrednost (
+    id_senzora UUID PRIMARY KEY,
+    ts TIMESTAMP,
+    temperatura FLOAT,
+    vlaznost FLOAT,
+    co2 FLOAT,
+    jacina_vetra FLOAT,
+    smer_vetra TEXT,
+    ph_zemljista FLOAT,
+    uv_vrednost FLOAT,
+    vlaznost_lista FLOAT,
+    pritisak_vazduha FLOAT,
+    pritisak_u_cevima FLOAT
+);  
+
+CREATE TABLE agrosense.senzor_agregat_dnevni (
+    id_lokacije UUID,
+    dan DATE,
+    parametar TEXT,        
+    avg_vrednost DOUBLE,
+    min_vrednost DOUBLE,
+    max_vrednost DOUBLE,
+
+    PRIMARY KEY ((id_lokacije, dan), parametar)
+);

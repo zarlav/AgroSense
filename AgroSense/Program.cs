@@ -1,4 +1,6 @@
+using AgroSense.Repositories.Korisnici;
 using AgroSense.Repositories.Merenja;
+using AgroSense.Repositories.ProizvodneJedinice;
 using AgroSense.Repositories.Senzor;
 using AgroSense.Services;
 using Cassandra;
@@ -28,10 +30,14 @@ builder.Services.AddScoped<MerenjaPoLokacijiRepository>();
 builder.Services.AddScoped<MerenjaPoDanuRepository>();
 builder.Services.AddScoped<MerenjaPoslednjaVrednostRepository>();
 builder.Services.AddScoped<SenzorRepository>();
+builder.Services.AddScoped<ProizvodneJediniceRepository>();
+builder.Services.AddScoped<KorisnikRepository>();
 
 // Services
 builder.Services.AddScoped<SenzorService>();
 builder.Services.AddScoped<MerenjaService>();
+builder.Services.AddScoped<ProizvodneJediniceService>();
+builder.Services.AddScoped<KorisnikService>();
 
 // **CORS**
 builder.Services.AddCors(options =>
