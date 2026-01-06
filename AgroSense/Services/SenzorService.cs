@@ -26,7 +26,7 @@ namespace AgroSense.Services
             return s;
         }
 
-        public List<Guid> VratiSveIdSenzora()
+        public List<SenzorIdDto> VratiSveIdSenzora()
         {
             return senzor.VratiSveIdSenzora(); 
         }

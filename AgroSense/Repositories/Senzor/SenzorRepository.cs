@@ -57,29 +57,33 @@ namespace AgroSense.Repositories.Senzor
             var rows = _session.Execute(stmt);
             var result = new List<SenzorResponseDto>();
             foreach (var row in rows)
-            { 
-                result.Add(new SenzorResponseDto 
+            {
+                result.Add(new SenzorResponseDto
                 {
                     SenzorId = row.GetValue<Guid>("id_senzora"),
                     LokacijaId = row.GetValue<Guid>("id_lokacije"),
-                    Model = row.GetValue<string>("model"), 
-                    Naziv = row.GetValue<string>("naziv"), 
-                    Proizvodjac = row.GetValue<string>("proizvodjac"), 
-                    Status = row.GetValue<string>("status"), 
-                    VremeInstalacije = row.GetValue<DateTime>("vreme_instalacije") 
+                    Model = row.GetValue<string>("model"),
+                    Naziv = row.GetValue<string>("naziv"),
+                    Proizvodjac = row.GetValue<string>("proizvodjac"),
+                    Status = row.GetValue<string>("status"),
+                    VremeInstalacije = row.GetValue<DateTime>("vreme_instalacije")
                 });
             }
             return result;
         }
 
-        public List<Guid> VratiSveIdSenzora()
+        public List<SenzorIdDto> VratiSveIdSenzora()
         {
-            var stmt = new SimpleStatement("SELECT id_senzora FROM senzor");
+            var stmt = new SimpleStatement("SELECT id_senzora, id_lokacije FROM senzor");
 
             var rows = _session.Execute(stmt);
 
             return rows
-                .Select(r => r.GetValue<Guid>("id_senzora"))
+                .Select(r => new SenzorIdDto
+                {
+                    SenzorId = r.GetValue<Guid>("id_senzora"),
+                    LokacijaId = r.GetValue<Guid>("id_lokacije")
+                })
                 .ToList();
         }
     }
