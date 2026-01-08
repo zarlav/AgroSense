@@ -33,9 +33,9 @@ namespace AgroSense.Services
         {
             return PoslednjaVrednost.VratiPoslednjeMerenje(senzor_id);
         }
-        public List<MerenjeResponseDto> VratiMerenjePoLokaciji(Guid lokacijaId, LocalDate dan)
+        public List<MerenjeResponseDto> VratiMerenjePoLokaciji(Guid lokacijaId, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
         {
-            return PoLokaciji.VratiMerenjaPoLokaciji(lokacijaId, dan);
+            return PoLokaciji.VratiMerenjaPoLokaciji(lokacijaId, dan, vremeOd, vremeDo);
         }
         public List<MerenjeResponseDto> VratiMerenjePoVremenu(Guid senzor_id, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
         {

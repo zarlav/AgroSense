@@ -51,12 +51,12 @@ namespace AgroSense.Controllers
         }
 
         [HttpGet("po_lokaciji")]
-        public IActionResult VratiMerenjePoLokaciji([FromQuery] Guid lokacijaId, [FromQuery] DateTime dan)
+        public IActionResult VratiMerenjePoLokaciji([FromQuery] Guid lokacijaId, [FromQuery] DateTime dan, [FromQuery] TimeSpan vremeOd, [FromQuery] TimeSpan vremeDo)
         {
             try
             {
                 var datum = new Cassandra.LocalDate(dan.Year, dan.Month, dan.Day);
-                var rezultat = _service.VratiMerenjePoLokaciji(lokacijaId, datum);
+                var rezultat = _service.VratiMerenjePoLokaciji(lokacijaId, datum, vremeOd, vremeDo);
                 if (rezultat.Count == 0)
                     return NotFound("Nema izmerenih vrednosti za dati senzor na datoj lokaciji.");
                 return Ok(rezultat);

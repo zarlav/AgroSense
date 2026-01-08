@@ -1,5 +1,6 @@
 ﻿using AgroSense.Domain;
 using Cassandra;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AgroSense.Repositories.Merenja
 {
@@ -39,16 +40,19 @@ namespace AgroSense.Repositories.Merenja
 
             _session.Execute(stmt);
         }
-        public List<DTOs.Merenje.MerenjeResponseDto> VratiMerenjaPoLokaciji(Guid lokacijaId, LocalDate dan)
+        public List<DTOs.Merenje.MerenjeResponseDto> VratiMerenjaPoLokaciji(Guid lokacijaId, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
         {
+            DateTime osnovniDatum = new DateTime(dan.Year, dan.Month, dan.Day);
+            DateTime pocetak = osnovniDatum.Add(vremeOd);
+            DateTime kraj = osnovniDatum.Add(vremeDo);
             var stmt = new SimpleStatement(
                 @"SELECT id_senzora, id_lokacije, dan, ts,
                  temperatura, vlaznost, co2, jacina_vetra,
                  smer_vetra, ph_zemljista, uv_vrednost,
                  vlaznost_lista, pritisak_vazduha, pritisak_u_cevima
           FROM senzor_podatak_po_lokaciji
-          WHERE id_lokacije = ? AND dan = ?",
-                lokacijaId, dan
+          WHERE id_lokacije = ? AND dan = ? AND ts >= ? AND ts <= ? LIMIT 100",
+                lokacijaId, dan, pocetak, kraj
             );
 
             var rows = _session.Execute(stmt);
