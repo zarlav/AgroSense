@@ -1,20 +1,13 @@
 .merenjaPoDanu {
-  max-width: 1200px;
-  margin: 40px auto;
-  padding: 24px;
-  font-family: "Segoe UI", Roboto, sans-serif;
-  color: #1f2937;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .merenjaPoDanu-Forma {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 28px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
-  margin-bottom: 32px;
+  position: sticky;
+  top: 16px;
+  z-index: 30;
 }
 
 .merenjaPoDanu-Polje {
@@ -89,6 +82,8 @@
 }
 
 .merenja-table-wrapper {
+  max-height: 420px;       
+  overflow-y: auto;
   overflow-x: auto;
   background: #ffffff;
   border-radius: 16px;
@@ -98,11 +93,17 @@
 .merenja-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 800px;
+  min-width: 900px;
 }
 
 .merenja-table thead {
   background: #1e293b;
+}
+
+.merenja-table thead th {
+  position: sticky;        
+  top: 0;
+  z-index: 10;
 }
 
 .merenja-table th {
@@ -129,12 +130,16 @@
   background: #eef2ff;
 }
 
-@media (max-width: 768px) {
-  .merenjaPoDanu {
-    padding: 16px;
-  }
+.merenja-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
 
-  .merenjaPoDanu-Forma {
-    padding: 20px;
-  }
+.merenja-table-wrapper::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 10px;
+}
+
+.merenja-table-wrapper::-webkit-scrollbar-track {
+  background: #eef2ff;
 }

@@ -1,41 +1,74 @@
 .senzori {
-  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 24px;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #1f2937;
 }
 
 .senzori-loading {
-  color: #555;
-}
-
-.senzori-error {
-  color: red;
-}
-
-.senzori-table-wrapper {
-  overflow-x: auto;
-}
-
-.senzori-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.senzori-table th,
-.senzori-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
   text-align: center;
-}
-
-.senzori-table th {
-  background-color: #f1f5f9;
+  color: #2563eb;
   font-weight: 600;
 }
 
-.senzori-table tr:nth-child(even) {
-  background-color: #fafafa;
+.senzori-error {
+  text-align: center;
+  color: #dc2626;
+  font-weight: 600;
+  background: #fee2e2;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 16px;
 }
 
+.senzori-table-wrapper {
+  max-height: 420px;   
+  overflow-y: auto;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+.senzori-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+  font-size: 14px;
+}
+
+.senzori-table thead {
+  background-color: #1e293b;
+}
+
+.senzori-table thead th {
+  position: sticky;    
+  top: 0;
+  z-index: 10;
+}
+
+.senzori-table th {
+  padding: 14px;
+  text-align: center;
+  font-weight: 600;
+  color: #f8fafc;
+  white-space: nowrap;
+}
+
+.senzori-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.senzori-table tbody tr:nth-child(even) {
+  background-color: #f9fafb;
+}
+
+.senzori-table tbody tr:hover {
+  background-color: #eef2ff;
+}
 .status {
   font-weight: 600;
 }
@@ -50,4 +83,17 @@
 
 .status.odrzavanje {
   color: #ca8a04;
+}
+.senzori-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.senzori-table-wrapper::-webkit-scrollbar-thumb {
+  background: #c7d2fe;
+  border-radius: 10px;
+}
+
+.senzori-table-wrapper::-webkit-scrollbar-track {
+  background: #eef2ff;
 }

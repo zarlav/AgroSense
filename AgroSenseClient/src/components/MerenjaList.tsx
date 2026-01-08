@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./MerenjaList.css";
 
+export interface SenzorDto {
+  senzorId: number;
+  naziv: string;
+}
+
 export interface MerenjaDto {
-  datum: string;
+  datum: { day: number; month: number; year: number };
   ts: string;
   temperatura: number;
   vlaznost: number;
@@ -17,10 +22,21 @@ export interface MerenjaDto {
 }
 
 export default function MerenjaList() {
+  const [senzori, setSenzori] = useState<SenzorDto[]>([]);
   const [idSenzora, setIdSenzora] = useState("");
   const [merenja, setMerenja] = useState<MerenjaDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        fetch("https://localhost:7025/api/Senzor/svi_senzori")
+          .then(res => {
+              if(!res.ok) throw new Error("Greska pri ocitavanju id-jeva senzora!");
+              return res.json();
+          })
+          .then((data: SenzorDto[]) => setSenzori(data))
+          .catch(err => setError(err.message));
+    }, []);
 
   const fetchMerenja = () => {
     if (!idSenzora) {
@@ -33,7 +49,7 @@ export default function MerenjaList() {
 
     fetch(`https://localhost:7025/api/Merenja/poslednje_merenje?senzorId=${idSenzora}`)
       .then(res => {
-        if (!res.ok) throw new Error("Greška pri učitavanju merenja");
+        if (!res.ok) throw new Error("Greska pri ocitavanju posglednjeg merenja!");
         return res.json();
       })
       .then((data: MerenjaDto[]) => setMerenja(data))
@@ -43,16 +59,19 @@ export default function MerenjaList() {
 
   return (
     <div className="merenja">
-      {/* forma */}
       <div className="merenja-form">
         <output></output>
-        <input
-          type="text"
-          placeholder="Unesite ID senzora"
-          value={idSenzora}
-          onChange={(e) => setIdSenzora(e.target.value)}
-          className="merenja-input"
-        />
+         <select
+            value={idSenzora}
+              onChange={(e) => setIdSenzora(e.target.value)}
+              className="merenjePoDanuInput">
+                  <option value="">Izaberite senzor</option>
+                    {senzori.map((s) => (
+                        <option key={s.senzorId} value={s.senzorId}>
+                            {s.naziv} (ID: {s.senzorId})
+                        </option>
+                    ))}
+            </select>
         <button onClick={fetchMerenja} className="merenja-btn">
           Prikazi merenje
         </button>
@@ -83,7 +102,7 @@ export default function MerenjaList() {
             <tbody>
               {merenja.map((s, index) => (
                 <tr key={index}>
-                  <td>{new Date(s.datum).toLocaleDateString()}</td>
+                  <td>{new Date(s.datum.year, s.datum.month - 1, s.datum.day).toLocaleDateString()}</td>
                   <td>{new Date(s.ts).toLocaleTimeString()}</td>
                   <td>{s.temperatura}</td>
                   <td>{s.vlaznost}</td>

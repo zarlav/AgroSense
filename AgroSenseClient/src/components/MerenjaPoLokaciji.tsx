@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./MerenjaPoVremenu.css";
 
+export type LokacijeDto = string;
 export interface MerenjaDto {
-  datum: string;
+  datum: { day: number; month: number; year: number };
   ts: string;
   temperatura: number;
   vlaznost: number;
@@ -17,11 +18,23 @@ export interface MerenjaDto {
 }
 
 export default function MerenjaPoLokaciji() {
-    const [lokacijaId, setIdSenzora] = useState("");
+    const [lokacije, setLokacije] = useState<LokacijeDto[]>([]);
+    const [lokacijaId, setIdLokacije] = useState("");
     const [dan, setDan] = useState("");
+    const [vremeOd, setVremeOd] = useState("");
+    const [vremeDo, setVremeDo] = useState("");
     const [merenjaPoLokaciji, setMerenjaPoLokaciji] = useState<MerenjaDto[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+useEffect(() => {
+  fetch("https://localhost:7025/api/ProizvodneJedinice/ids")
+    .then(res => {
+      if(!res.ok) throw new Error("Greska pri ucitavanju id-eva jedinica!");
+      return res.json();
+    })
+    .then((data: string[]) => setLokacije(data))
+    .catch(err => setError(err.message));
+}, []);
 
     const fetchMerenjaPoLokaciji = () => {
         if(!lokacijaId) {
@@ -32,10 +45,18 @@ export default function MerenjaPoLokaciji() {
             setError("Unesite datum u formatu yyyy-mm-dd");
             return;
         }
+           else if(!vremeOd) {
+            setError("Unesite vreme u formatu hh:mm");
+            return;
+        }
+        else if(!vremeDo) {
+            setError("Unesite vreme u formatu hh:mm");
+            return;
+        }
 
         setLoading(true);
         setError(null);
-    fetch(`https://localhost:7025/api/Merenja/po_lokaciji?lokacijaId=${lokacijaId}&dan=${dan}`)
+    fetch(`https://localhost:7025/api/Merenja/po_lokaciji?lokacijaId=${lokacijaId}&dan=${dan}&vremeOd=${vremeOd}&vremeDo=${vremeDo}`)
             .then( res => {
                 if(!res.ok)
                     throw new Error("Greska pri ucitavanju merenja po lokaciji!");
@@ -49,18 +70,34 @@ return(
         <div className="merenjaPoDanu">
             <div className="merenjaPoDanu-Forma">
                 <output></output>
+               <select
+              value={lokacijaId}
+              onChange={(e) => setIdLokacije(e.target.value)}
+              className="merenjePoDanuInput">
+              <option value="">Izaberite proizvodnu jedinicu</option>
+                {lokacije.map((id) => (
+                  <option key={id} value={id}>{id}</option>
+                  ))}
+              </select>
                 <input
-                 type="text"
-                 placeholder="Unesite ID lokacije"
-                 value={lokacijaId}
-                onChange={(e) =>setIdSenzora(e.target.value)}
+                type="date"
+                 placeholder="Izaberite dan"
+                 value={dan}
+                onChange={(e) =>setDan(e.target.value)}
                 className="merenjePoDanuInput"
                 ></input>
                 <input
-                type="text"
-                 placeholder="Unesite dan"
-                 value={dan}
-                onChange={(e) =>setDan(e.target.value)}
+                type="time"
+                 placeholder="Vreme od:"
+                 value={vremeOd}
+                onChange={(e) =>setVremeOd(e.target.value)}
+                className="merenjePoDanuInput"
+                ></input>
+                <input
+                type="time"
+                 placeholder="Vreme do:"
+                 value={vremeDo}
+                onChange={(e) =>setVremeDo(e.target.value)}
                 className="merenjePoDanuInput"
                 ></input>
                 <button onClick={fetchMerenjaPoLokaciji} className="merenjaPoDanu-btn">
@@ -91,7 +128,7 @@ return(
             <tbody>
               {merenjaPoLokaciji.map((s, index) => (
                 <tr key={index}>
-                  <td>{new Date(s.datum).toLocaleDateString()}</td>
+                  <td>{new Date(s.datum.year, s.datum.month - 1, s.datum.day).toLocaleDateString()}</td>
                   <td>{new Date(s.ts).toLocaleTimeString()}</td>
                   <td>{s.temperatura}</td>
                   <td>{s.vlaznost}</td>
