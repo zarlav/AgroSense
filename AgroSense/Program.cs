@@ -29,10 +29,12 @@ builder.Services.AddScoped<SenzorRepository>();
 builder.Services.AddScoped<ProizvodneJediniceRepository>();
 builder.Services.AddScoped<KorisnikRepository>();
 
+
 builder.Services.AddScoped<SenzorService>();
 builder.Services.AddScoped<MerenjaService>();
 builder.Services.AddScoped<ProizvodneJediniceService>();
 builder.Services.AddScoped<KorisnikService>();
+builder.Services.AddScoped<AlarmService>();
 
 builder.Services.AddCors(options =>
 {
