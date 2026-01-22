@@ -1,0 +1,108 @@
+/* Kontejner za celu stranicu */
+.proizvodne-jedinice-container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 20px;
+    animation: fadeIn 0.5s ease-in;
+    color: #000000; /* Crna boja za sav tekst u kontejneru */
+}
+
+/* KLJUČNA ISPRAVKA: Stil za sama polja za unos */
+.merenjePoDanuInput {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    background-color: #ffffff; /* Bela pozadina polja */
+    color: #000000 !important; /* FORSIRANO CRNA BOJA TEKSTA DOK KUCAŠ */
+    transition: all 0.2s ease;
+}
+
+/* Boja teksta koji stoji kao uputstvo (placeholder) */
+.merenjePoDanuInput::placeholder {
+    color: #6b7280; 
+}
+
+/* Stil za formu sa Grid-om */
+.forma-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+}
+
+/* Naslovi sekcija (📍 Osnovni podaci, 🌡️ Senzori...) */
+.sekcija-naslov {
+    grid-column: 1 / -1;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b; /* Tamno plavo/crna za naslove */
+    margin-top: 15px;
+    margin-bottom: 5px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #3b82f6;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Grupisanje Min/Max polja */
+.input-group-row {
+    display: flex;
+    gap: 10px;
+}
+
+.input-group-row input {
+    width: 50%;
+}
+
+/* Dugmići */
+.forma-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.btn-prikazi {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    color: white !important; /* Tekst na dugmetu neka ostane beo */
+}
+
+/* Tabela */
+.tabela-tip-oznaka {
+    background-color: #eff6ff;
+    color: #2563eb;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 12px;
+    border: 1px solid #dbeafe;
+}
+
+/* Boja teksta u tabeli za obične ćelije */
+.merenja-table td {
+    color: #000000;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+    .forma-grid {
+        grid-template-columns: 1fr;
+    }
+    .input-group-row {
+        flex-direction: column;
+    }
+    .input-group-row input {
+        width: 100%;
+    }
+}

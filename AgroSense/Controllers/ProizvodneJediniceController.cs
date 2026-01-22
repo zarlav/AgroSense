@@ -28,42 +28,43 @@ namespace AgroSense.Controllers
             return Ok(_service.VratiSve());
         }
 
-        [HttpGet("{id}")]
-        public IActionResult VratiJednu(Guid id)
+        // Potrebna su oba ključa zbog strukture tabele
+        [HttpGet("{tip}/{id}")]
+        public IActionResult VratiJednu(string tip, Guid id)
         {
-            var jedinica = _service.VratiPoId(id);
+            var jedinica = _service.VratiPoId(tip, id);
             if (jedinica == null)
                 return NotFound("Proizvodna jedinica ne postoji.");
 
             return Ok(jedinica);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody] ProizvodnaJedinicaUpdateDto dto)
+        [HttpPut("{tip}/{id}")]
+        public IActionResult Update(string tip, Guid id, [FromBody] ProizvodnaJedinicaUpdateDto dto)
         {
-            var postojeca = _service.VratiPoId(id);
+            var postojeca = _service.VratiPoId(tip, id);
             if (postojeca == null)
                 return NotFound("Proizvodna jedinica ne postoji.");
 
-            _service.Update(id, dto);
+            _service.Update(tip, id, dto);
             return Ok("Proizvodna jedinica uspešno ažurirana.");
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Obrisi(Guid id)
+        [HttpDelete("{tip}/{id}")]
+        public IActionResult Obrisi(string tip, Guid id)
         {
-            var jedinica = _service.VratiPoId(id);
+            var jedinica = _service.VratiPoId(tip, id);
             if (jedinica == null)
                 return NotFound("Proizvodna jedinica ne postoji.");
 
-            _service.Obrisi(id);
+            _service.Obrisi(tip, id);
             return Ok("Proizvodna jedinica je deaktivirana.");
         }
+
         [HttpGet("ids")]
         public IActionResult VratiSveIdjeve()
         {
             return Ok(_service.VratiSveIdjeve());
         }
-
     }
 }

@@ -3,6 +3,7 @@ import SenzoriList from "./SenzoriList";
 import MerenjaList from "./MerenjaList";
 import MerenjaPoVremenu from "./MerenjaPoVremenu";
 import MerenjaPoLokaciji from "./MerenjaPoLokaciji";
+import ProizvodneJedinice from "./ProizvodneJedinice";
 import "./Kartice.css";
 
 export default function Kartice() {
@@ -18,6 +19,8 @@ export default function Kartice() {
         return <MerenjaPoVremenu />;
       case "Merenja po lokaciji":
         return <MerenjaPoLokaciji />;
+      case "Proizvodne jedinice":
+        return <ProizvodneJedinice />;
       default:
         return null;
     }
@@ -26,7 +29,7 @@ export default function Kartice() {
   return (
     <div className="kartice">
       <div className="tab-nav">
-        {["Senzori", "Poslednje merenje", "Merenja po vremenu", "Merenja po lokaciji"].map((tab) => (
+        {["Senzori", "Poslednje merenje", "Merenja po vremenu", "Merenja po lokaciji", "Proizvodne jedinice"].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}

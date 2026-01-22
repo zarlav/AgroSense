@@ -1,4 +1,6 @@
-﻿using AgroSense.DTOs.ProizvodnaJedinica;
+﻿using System;
+using System.Collections.Generic; // Dodato za podršku Listi
+using AgroSense.DTOs.ProizvodnaJedinica;
 using AgroSense.Repositories.ProizvodneJedinice;
 
 namespace AgroSense.Services
@@ -22,23 +24,27 @@ namespace AgroSense.Services
             return _repo.VratiSve();
         }
 
-        public ProizvodnaJedinicaViewDto? VratiPoId(Guid id)
+        // Promijenjeno: Prima i tip i id da bi se slagalo sa Controllerom i Repository-jem
+        public ProizvodnaJedinicaViewDto? VratiPoId(string tip, Guid id)
         {
-            return _repo.VratiPoId(id);
+            return _repo.VratiPoId(tip, id);
         }
 
-        public void Update(Guid id, ProizvodnaJedinicaUpdateDto dto)
+        // Promijenjeno: Dodat 'tip' za update
+        public void Update(string tip, Guid id, ProizvodnaJedinicaUpdateDto dto)
         {
-            _repo.Update(id, dto);
+            _repo.Update(tip, id, dto);
         }
-        public void Obrisi(Guid id)
+
+        // Promijenjeno: Dodat 'tip' za brisanje (soft delete u bazi)
+        public void Obrisi(string tip, Guid id)
         {
-            _repo.Obrisi(id);
+            _repo.Obrisi(tip, id);
         }
+
         public List<Guid> VratiSveIdjeve()
         {
             return _repo.VratiSveIdjeve();
         }
-
     }
 }
