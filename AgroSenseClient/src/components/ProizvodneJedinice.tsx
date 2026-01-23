@@ -5,7 +5,6 @@ export default function ProizvodneJedinice() {
     const [lista, setLista] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     
-    // Inicijalno stanje sa SVIM poljima iz backend DTO-a
     const [forma, setForma] = useState({
         tip_jedinice: "", naziv: "", geo_lat: 0, geo_long: 0, povrsina: 0,
         nadmorska_visina: 0, Vrsta_biljaka: "", status_mreze: "", Odgovorno_lice: "", opis: "",
@@ -34,7 +33,6 @@ export default function ProizvodneJedinice() {
         const res = await fetch("https://localhost:7025/api/ProizvodneJedinice");
         const data = await res.json();
         
-        // OVA LINIJA JE KLJUČNA - POGLEDAJ JE U BROUSERU (F12 -> Console)
         console.log("BACKEND POSLAO OVO:", data[0]); 
         
         setLista(data);
@@ -56,7 +54,7 @@ export default function ProizvodneJedinice() {
     return (
         <div className="proizvodne-jedinice-container">
             <div className="forma-grid">
-                <div className="sekcija-naslov">Osnovni podaci i Lokacija</div>
+                <div className="sekcija-naslov">Osnovni podaci i lokacija</div>
                 <input name="naziv" className="merenjePoDanuInput" placeholder="Naziv" onChange={handleChange} />
                 <input name="tip_jedinice" className="merenjePoDanuInput" placeholder="Tip (npr. Staklenik A)" onChange={handleChange} />
                 <input name="Odgovorno_lice" className="merenjePoDanuInput" placeholder="Odgovorno lice" onChange={handleChange} />
@@ -68,7 +66,7 @@ export default function ProizvodneJedinice() {
                 <input name="status_mreze" className="merenjePoDanuInput" placeholder="Status mreže" onChange={handleChange} />
                 <input name="opis" className="merenjePoDanuInput" style={{ gridColumn: 'span 2' }} placeholder="Kratak opis jedinice" onChange={handleChange} />
 
-                <div className="sekcija-naslov">Atmosferski parametri (Min / Max)</div>
+                <div className="sekcija-naslov">Atmosferski parametri (min / max)</div>
                 <div className="input-group-row">
                     <input name="granica_temp_min" type="number" className="merenjePoDanuInput" placeholder="Temp Min" onChange={handleChange} />
                     <input name="granica_temp_max" type="number" className="merenjePoDanuInput" placeholder="Temp Max" onChange={handleChange} />
@@ -78,15 +76,15 @@ export default function ProizvodneJedinice() {
                     <input name="granica_vlaznost_max" type="number" className="merenjePoDanuInput" placeholder="Vlažnost Max" onChange={handleChange} />
                 </div>
                 <div className="input-group-row">
-                    <input name="granica_co2_min" type="number" className="merenjePoDanuInput" placeholder="CO₂ Min" onChange={handleChange} />
-                    <input name="granica_co2_max" type="number" className="merenjePoDanuInput" placeholder="CO₂ Max" onChange={handleChange} />
+                    <input name="granica_co2_min" type="number" className="merenjePoDanuInput" placeholder="CO2 Min" onChange={handleChange} />
+                    <input name="granica_co2_max" type="number" className="merenjePoDanuInput" placeholder="CO2 Max" onChange={handleChange} />
                 </div>
                 <div className="input-group-row">
-                    <input name="granica_pritisak_vazduha_min" type="number" className="merenjePoDanuInput" placeholder="Pritisak vazd. Min" onChange={handleChange} />
-                    <input name="granica_pritisak_vazduha_max" type="number" className="merenjePoDanuInput" placeholder="Pritisak vazd. Max" onChange={handleChange} />
+                    <input name="granica_pritisak_vazduha_min" type="number" className="merenjePoDanuInput" placeholder="Prit. vazd. Min" onChange={handleChange} />
+                    <input name="granica_pritisak_vazduha_max" type="number" className="merenjePoDanuInput" placeholder="Prit. vazd. Max" onChange={handleChange} />
                 </div>
 
-                <div className="sekcija-naslov">Vetar, Svetlost i Navodnjavanje</div>
+                <div className="sekcija-naslov">Vetar, svetlost i navodnjavanje</div>
                 <div className="input-group-row">
                     <input name="granica_jacina_vetra_min" type="number" className="merenjePoDanuInput" placeholder="Vetra Min" onChange={handleChange} />
                     <input name="granica_jacina_vetra_max" type="number" className="merenjePoDanuInput" placeholder="Vetra Max" onChange={handleChange} />
@@ -106,7 +104,7 @@ export default function ProizvodneJedinice() {
 
                 <div className="forma-actions">
                     <button className="merenjaPoDanu-btn" onClick={dodajJedinicu}>Dodaj jedinicu</button>
-                    <button className="merenjaPoDanu-btn btn-prikazi" onClick={ucitajSve}>Prikaži sve (Sortirano)</button>
+                    <button className="merenjaPoDanu-btn btn-prikazi" onClick={ucitajSve}>Prikaži sve</button>
                 </div>
             </div>
 
@@ -131,7 +129,7 @@ export default function ProizvodneJedinice() {
                                     <td>{j.povrsina} m²</td>
                                     <td>{j.vrsta_biljaka}</td>
                                     <td>{j.odgovorno_lice}</td>
-                                    <td>{j.aktivno ? "✅ Aktivan" : "❌ Inaktivan"}</td>
+                                    <td>{j.aktivno ? "Aktivan" : "Inaktivan"}</td>
                                 </tr>
                             ))}
                         </tbody>

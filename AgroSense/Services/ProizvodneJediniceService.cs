@@ -24,19 +24,16 @@ namespace AgroSense.Services
             return _repo.VratiSve();
         }
 
-        // Promijenjeno: Prima i tip i id da bi se slagalo sa Controllerom i Repository-jem
         public ProizvodnaJedinicaViewDto? VratiPoId(string tip, Guid id)
         {
             return _repo.VratiPoId(tip, id);
         }
 
-        // Promijenjeno: Dodat 'tip' za update
         public void Update(string tip, Guid id, ProizvodnaJedinicaUpdateDto dto)
         {
             _repo.Update(tip, id, dto);
         }
 
-        // Promijenjeno: Dodat 'tip' za brisanje (soft delete u bazi)
         public void Obrisi(string tip, Guid id)
         {
             _repo.Obrisi(tip, id);

@@ -13,8 +13,6 @@
         public string Odgovorno_lice { get; set; } = string.Empty;
         public string Opis { get; set; } = string.Empty;
         public bool Aktivno { get; set; }
-
-        // Senzori (Moraju biti ovde da bi Update u Repository-ju radio)
         public float Granica_temp_min { get; set; }
         public float Granica_temp_max { get; set; }
         public float Granica_vlaznost_min { get; set; }

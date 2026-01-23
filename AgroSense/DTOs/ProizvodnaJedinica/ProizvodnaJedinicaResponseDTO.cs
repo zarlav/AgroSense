@@ -10,7 +10,6 @@ namespace AgroSense.DTOs.ProizvodnaJedinica
         public float Povrsina { get; set; }
         public bool Aktivno { get; set; }
 
-        // DODATA POLJA:
         public string Vrsta_biljaka { get; set; } = string.Empty;
         public string Odgovorno_lice { get; set; } = string.Empty;
     }

@@ -42,7 +42,6 @@ namespace AgroSense.Repositories.ProizvodneJedinice
 
         public List<ProizvodnaJedinicaResponseDto> VratiSve()
         {
-            // ISPRAVLJENO: Dodate su kolone vrsta_biljaka i odgovorno_lice u SELECT
             var rs = _session.Execute("SELECT tip_jedinice, id_jedinice, naziv, povrsina, aktivno, vrsta_biljaka, odgovorno_lice FROM proizvodne_jedinice");
 
             return rs.Select(r => new ProizvodnaJedinicaResponseDto
@@ -52,7 +51,6 @@ namespace AgroSense.Repositories.ProizvodneJedinice
                 Naziv = r.GetValue<string>("naziv"),
                 Povrsina = r.GetValue<float>("povrsina"),
                 Aktivno = r.GetValue<bool>("aktivno"),
-                // ISPRAVLJENO: Dodato mapiranje vrednosti iz baze u DTO
                 Vrsta_biljaka = r.GetValue<string>("vrsta_biljaka"),
                 Odgovorno_lice = r.GetValue<string>("odgovorno_lice")
             }).ToList();
