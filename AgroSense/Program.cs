@@ -28,6 +28,7 @@ builder.Services.AddScoped<MerenjaPoslednjaVrednostRepository>();
 builder.Services.AddScoped<SenzorRepository>();
 builder.Services.AddScoped<ProizvodneJediniceRepository>();
 builder.Services.AddScoped<KorisnikRepository>();
+builder.Services.AddScoped<AlarmRepository>();
 
 
 builder.Services.AddScoped<SenzorService>();

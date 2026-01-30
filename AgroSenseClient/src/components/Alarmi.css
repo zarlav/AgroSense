@@ -1,0 +1,148 @@
+.alarmi {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.alarmi-Forma {
+  position: sticky;
+  top: 16px;
+  z-index: 30;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.alarmi-Polje {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.alarmi-Polje label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.alarmiInput {
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  background-color: #f9fafb;
+  transition: all 0.2s ease;
+}
+
+.alarmiInput::placeholder {
+  color: #9ca3af;
+}
+
+.alarmiInput:focus {
+  outline: none;
+  border-color: #dc2626;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+.alarmi-btn {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.alarmi-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(220, 38, 38, 0.35);
+}
+
+.alarmi-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.3);
+}
+
+.alarmi-loading {
+  text-align: center;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.alarmi-error {
+  text-align: center;
+  color: #b91c1c;
+  font-weight: 600;
+  background: #fee2e2;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.alarmi-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.alarmi-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.alarmi-table thead {
+  background: #7f1d1d;
+}
+
+.alarmi-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.alarmi-table th {
+  padding: 14px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fef2f2;
+  white-space: nowrap;
+}
+
+.alarmi-table td {
+  padding: 12px 14px;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.alarmi-table tbody tr:nth-child(even) {
+  background: #fef2f2;
+}
+
+.alarmi-table tbody tr:hover {
+  background: #fee2e2;
+}
+
+.alarmi-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.alarmi-table-wrapper::-webkit-scrollbar-thumb {
+  background: #fca5a5;
+  border-radius: 10px;
+}
+
+.alarmi-table-wrapper::-webkit-scrollbar-track {
+  background: #fee2e2;
+}

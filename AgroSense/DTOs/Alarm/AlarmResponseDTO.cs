@@ -1,19 +1,19 @@
-﻿using System;
-using Cassandra;
-
-namespace AgroSense.DTOs.Alarm
+﻿public class AlarmResponseDTO
 {
-    public class AlarmResponseDTO
-    {
-        public Guid LokacijaId { get; set; }
-        public Guid SenzorId { get; set; }
+    public Guid IdAlarma { get; set; }
+    public Guid IdSenzora { get; set; }
 
-        public string Parametar { get; set; }
-        public float Vrednost { get; set; }
-        public float Min { get; set; }
-        public float Max { get; set; }
+    public string TipSenzora { get; set; }
+    public string Parametar { get; set; }
 
-        public DateTime Vreme { get; set; }
-        public string Poruka { get; set; }
-    }
+    public double TrenutnaVrednost { get; set; }
+    public double GranicnaVrednost { get; set; }
+
+    public string StanjePre { get; set; }
+    public string StanjePosle { get; set; }
+
+    public string Prioritet { get; set; }
+    public string Komentar { get; set; }
+
+    public DateTime VremeAktivacije { get; set; }
 }
