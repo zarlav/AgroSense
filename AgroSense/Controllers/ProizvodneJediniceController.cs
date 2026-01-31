@@ -16,23 +16,22 @@ namespace AgroSense.Controllers
         }
 
         [HttpPost]
-        public IActionResult Dodaj([FromBody] ProizvodnaJedinicaCreateDto dto)
+        public async Task<IActionResult> Dodaj([FromBody] ProizvodnaJedinicaCreateDto dto)
         {
-            _service.Dodaj(dto);
+            await _service.Dodaj(dto);
             return Ok("Proizvodna jedinica dodata.");
         }
 
         [HttpGet]
-        public IActionResult VratiSve()
+        public async Task<IActionResult> VratiSve()
         {
-            return Ok(_service.VratiSve());
+            return Ok(await _service.VratiSve());
         }
 
-        // Potrebna su oba ključa zbog strukture tabele
         [HttpGet("{tip}/{id}")]
-        public IActionResult VratiJednu(string tip, Guid id)
+        public async Task<IActionResult> VratiJednu(string tip,bool stanje, Guid id)
         {
-            var jedinica = _service.VratiPoId(tip, id);
+            var jedinica = await _service.VratiPoId(tip, stanje, id);
             if (jedinica == null)
                 return NotFound("Proizvodna jedinica ne postoji.");
 
@@ -40,31 +39,31 @@ namespace AgroSense.Controllers
         }
 
         [HttpPut("{tip}/{id}")]
-        public IActionResult Update(string tip, Guid id, [FromBody] ProizvodnaJedinicaUpdateDto dto)
+        public async Task<IActionResult> Update(string tip,bool stanje, Guid id, [FromBody] ProizvodnaJedinicaUpdateDto dto)
         {
-            var postojeca = _service.VratiPoId(tip, id);
+            var postojeca = await _service.VratiPoId(tip, stanje, id);
             if (postojeca == null)
                 return NotFound("Proizvodna jedinica ne postoji.");
 
-            _service.Update(tip, id, dto);
-            return Ok("Proizvodna jedinica uspešno ažurirana.");
+            await _service.Update(tip,stanje, id, dto);
+            return Ok("Proizvodna jedinica je uspesno azurirana.");
         }
 
         [HttpDelete("{tip}/{id}")]
-        public IActionResult Obrisi(string tip, Guid id)
+        public async Task<IActionResult> Obrisi(string tip,bool stanje, Guid id)
         {
-            var jedinica = _service.VratiPoId(tip, id);
+            var jedinica = await _service.VratiPoId(tip,stanje, id);
             if (jedinica == null)
                 return NotFound("Proizvodna jedinica ne postoji.");
 
-            _service.Obrisi(tip, id);
+            await _service.Obrisi(tip,stanje, id);
             return Ok("Proizvodna jedinica je deaktivirana.");
         }
 
         [HttpGet("ids")]
-        public IActionResult VratiSveIdjeve()
+        public async Task<IActionResult> VratiSveIdjeve()
         {
-            return Ok(_service.VratiSveIdjeve());
+            return Ok(await _service.VratiSveIdjeve());
         }
     }
 }

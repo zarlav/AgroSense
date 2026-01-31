@@ -14,13 +14,13 @@ namespace AgroSense.Controllers
             _service = service;
         }
         [HttpPost("DodajSenzor")]
-        public IActionResult DodajSenzor([FromBody] SenzorCreateDto senzor)
+        public async Task<IActionResult> DodajSenzor([FromBody] SenzorCreateDto senzor)
         {
             if (senzor == null)
                 return BadRequest("Senzor nije dodat!");
             try
             {
-                _service.DodajSenzor(senzor);
+                await _service.DodajSenzor(senzor);
                 return Ok("Senzor je uspesno dodat!");
             }
             catch (Exception e)
@@ -29,11 +29,11 @@ namespace AgroSense.Controllers
             }
         }
         [HttpGet("senzor")]
-        public IActionResult VratiSenzor([FromQuery] Guid senzorId)
+        public async Task<IActionResult> VratiSenzor([FromQuery] Guid senzorId)
         {
             try
             {
-                var senzor = _service.VratiSenzor(senzorId);
+                var senzor = await _service.VratiSenzor(senzorId);
                 return Ok(senzor);
             }
             catch (KeyNotFoundException knfEx)
@@ -46,11 +46,11 @@ namespace AgroSense.Controllers
             }
         }
         [HttpGet("svi_senzori")]
-        public IActionResult VratiSveSenzore()
+        public async Task<IActionResult> VratiSveSenzore()
         {
             try
             {
-                var senzori = _service.VratiSveSenzore();
+                var senzori = await _service.VratiSveSenzore();
                 return Ok(senzori);
             }
             catch (Exception ex)
@@ -59,9 +59,9 @@ namespace AgroSense.Controllers
             }
         }
         [HttpGet("svi_senzori_ids")]
-        public IActionResult VratiSveIdSenzora()
+        public async Task<IActionResult> VratiSveIdSenzora()
         {
-            var ids = _service.VratiSveIdSenzora();
+            var ids = await _service.VratiSveIdSenzora();
 
             if (ids.Count == 0)
                 return NoContent();

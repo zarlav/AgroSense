@@ -16,34 +16,37 @@ namespace AgroSense.Controllers
         }
 
         [HttpPost]
-        public IActionResult Dodaj([FromBody] KorisnikCreateDto dto)
+        public async Task <IActionResult> Dodaj([FromBody] KorisnikCreateDto dto)
         {
-            _service.Dodaj(dto);
+            await _service.Dodaj(dto);
             return Ok("Korisnik dodat.");
         }
 
         [HttpGet]
-        public IActionResult VratiSve() => Ok(_service.VratiSve());
+        public async Task<IActionResult> VratiSve()
+        {
+           return Ok(await _service.VratiSve());    
+        }
 
         [HttpGet("{id}")]
-        public IActionResult VratiJednog(Guid id)
+        public async Task<IActionResult> VratiJednog(Guid id)
         {
-            var korisnik = _service.VratiPoId(id);
+            var korisnik = await _service.VratiPoId(id);
             if (korisnik == null) return NotFound("Korisnik ne postoji.");
             return Ok(korisnik);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(Guid id, [FromBody] KorisnikCreateDto dto)
+        public async Task <IActionResult> Update(Guid id, [FromBody] KorisnikCreateDto dto)
         {
-            _service.Update(id, dto);
+            await _service.Update(id, dto);
             return Ok("Korisnik ažuriran.");
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            _service.Delete(id);
+            await _service.Delete(id);
             return Ok("Korisnik obrisan.");
         }
     }

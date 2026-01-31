@@ -2,6 +2,7 @@
 using AgroSense.Services;
 using Cassandra;
 using AgroSense.DTOs.Merenje;
+using System.Threading.Tasks;
 
 namespace AgroSense.Repositories.Merenja
 {
@@ -14,16 +15,16 @@ namespace AgroSense.Repositories.Merenja
             _session = session;
         }
 
-        public void DodajMerenja(MerenjeCreateDto merenje)
+        public async Task DodajMerenja(MerenjeCreateDto merenje)
         {
             if (merenje == null) return;
 
-            var query = new SimpleStatement(@"
+            var ps = _session.Prepare(@"
                 INSERT INTO senzor_podatak_po_danu 
-                (id_senzora, id_lokacije, dan, ts, temperatura, vlaznost, co2, jacina_vetra,
-                 smer_vetra, ph_zemljista, uv_vrednost, vlaznost_lista, pritisak_vazduha, pritisak_u_cevima)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                merenje.Id_senzora,
+                (id_senzora, id_lokacije, dan, ts, temperatura, vlaznost, co2, jacina_vetra,smer_vetra, ph_zemljista, uv_vrednost, vlaznost_lista, pritisak_vazduha, pritisak_u_cevima)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            await _session.ExecuteAsync(ps.Bind(
+            merenje.Id_senzora,
                 merenje.Id_loakcije,
                 merenje.Datum,
                 merenje.Ts,
@@ -37,27 +38,21 @@ namespace AgroSense.Repositories.Merenja
                 merenje.Vlaznost_lista,
                 merenje.Pritisak_vazduha,
                 merenje.Pritisak_u_cevima
-            );
-
-            _session.Execute(query);
+            ));
         }
 
-        public List<MerenjeResponseDto> VratiMerenjaPoDanu(Guid senzorId, LocalDate dan)
+        public async Task<List<MerenjeResponseDto>> VratiMerenjaPoDanu(Guid senzorId, LocalDate dan)
         {
-            var query = new SimpleStatement(@"
-                SELECT id_senzora, id_lokacije, dan, ts, temperatura, vlaznost, co2, jacina_vetra,
+
+            var ps = _session.Prepare(@"SELECT id_senzora, id_lokacije, dan, ts, temperatura, vlaznost, co2, jacina_vetra,
                        smer_vetra, ph_zemljista, uv_vrednost, vlaznost_lista, pritisak_vazduha, pritisak_u_cevima
                 FROM senzor_podatak_po_danu
                 WHERE dan = ? AND id_senzora = ?
-                ORDER BY ts DESC",
-                dan, senzorId
-            );
+                ORDER BY ts DESC");
+            var rs = await _session.ExecuteAsync(ps.Bind(dan, senzorId));
 
-            var rows = _session.Execute(query);
-            return rows.Select(row => new MerenjeResponseDto
+            return rs.Select(row => new MerenjeResponseDto
             {
-             //   Id_senzora = row.GetValue<Guid>("id_senzora"),
-             //   Id_loakcije = row.GetValue<Guid>("id_lokacije"),
                 Datum = row.GetValue<LocalDate>("dan"),
                 Ts = row.GetValue<DateTime>("ts"),
                 Temperatura = row.GetValue<float>("temperatura"),
@@ -72,45 +67,35 @@ namespace AgroSense.Repositories.Merenja
                 Pritisak_u_cevima = row.GetValue<float>("pritisak_u_cevima")
             }).ToList();
         }
-        public List<MerenjeResponseDto> VratiMerenjaPoVremeneskomOpsegu(Guid senzorId, LocalDate datum, TimeSpan vremeOd, TimeSpan vremeDo)
+        public async Task <List<MerenjeResponseDto>> VratiMerenjaPoVremeneskomOpsegu(Guid senzorId, LocalDate datum, TimeSpan vremeOd, TimeSpan vremeDo)
         {
             DateTime osnovniDatum = new DateTime(datum.Year, datum.Month, datum.Day);
             DateTime pocetak = osnovniDatum.Add(vremeOd);
             DateTime kraj = osnovniDatum.Add(vremeDo);
-            var stmt = new SimpleStatement(
-            @"SELECT id_senzora, id_lokacije, dan, ts,
+            var ps = _session.Prepare(@"SELECT id_senzora, id_lokacije, dan, ts,
                  temperatura, vlaznost, co2, jacina_vetra,
                  smer_vetra, ph_zemljista, uv_vrednost,
                  vlaznost_lista, pritisak_vazduha, pritisak_u_cevima
             FROM senzor_podatak_po_danu
-            WHERE id_senzora = ? AND dan = ? AND ts >= ? AND ts <= ?", senzorId, datum, pocetak, kraj);
+            WHERE id_senzora = ? AND dan = ? AND ts >= ? AND ts <= ?");
+            var rs = await _session.ExecuteAsync(ps.Bind(senzorId, datum, pocetak, kraj));
 
-            var rows = _session.Execute(stmt);
 
-            var rezultat = new List<MerenjeResponseDto>();
-
-            foreach (var row in rows)
+            return rs.Select(row => new MerenjeResponseDto
             {
-                rezultat.Add(new MerenjeResponseDto
-                {
-                //    Id_senzora = row.GetValue<Guid>("id_senzora"),
-                //    Id_loakcije = row.GetValue<Guid>("id_lokacije"),
-                    Datum = row.GetValue<LocalDate>("dan"),
-                    Ts = row.GetValue<DateTime>("ts"),
-                    Temperatura = row.GetValue<float>("temperatura"),
-                    Vlaznost = row.GetValue<float>("vlaznost"),
-                    Co2 = row.GetValue<float>("co2"),
-                    Jacina_vetra = row.GetValue<float>("jacina_vetra"),
-                    smer_vetra = row.GetValue<string>("smer_vetra"),
-                    Ph_zemljista = row.GetValue<float>("ph_zemljista"),
-                    Uv_vrednost = row.GetValue<float>("uv_vrednost"),
-                    Vlaznost_lista = row.GetValue<float>("vlaznost_lista"),
-                    Pritisak_vazduha = row.GetValue<float>("pritisak_vazduha"),
-                    Pritisak_u_cevima = row.GetValue<float>("pritisak_u_cevima")
-                });
-            }
-
-            return rezultat;
+                Datum = row.GetValue<LocalDate>("dan"),
+                Ts = row.GetValue<DateTime>("ts"),
+                Temperatura = row.GetValue<float>("temperatura"),
+                Vlaznost = row.GetValue<float>("vlaznost"),
+                Co2 = row.GetValue<float>("co2"),
+                Jacina_vetra = row.GetValue<float>("jacina_vetra"),
+                smer_vetra = row.GetValue<string>("smer_vetra"),
+                Ph_zemljista = row.GetValue<float>("ph_zemljista"),
+                Uv_vrednost = row.GetValue<float>("uv_vrednost"),
+                Vlaznost_lista = row.GetValue<float>("vlaznost_lista"),
+                Pritisak_vazduha = row.GetValue<float>("pritisak_vazduha"),
+                Pritisak_u_cevima = row.GetValue<float>("pritisak_u_cevima")
+            }).ToList();
         }
 
     }

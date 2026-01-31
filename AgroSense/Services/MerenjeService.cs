@@ -18,28 +18,28 @@ namespace AgroSense.Services
             PoslednjaVrednost = poslednjeMerenje;
         }
 
-        public void SacuvajMerenje(MerenjeCreateDto m)
+        public async Task SacuvajMerenje(MerenjeCreateDto m)
         {
-            PoDanu.DodajMerenja(m);
-            PoLokaciji.DodajMerenja(m);
-            PoslednjaVrednost.DodajMerenja(m);
+            await PoDanu.DodajMerenja(m);
+            await PoLokaciji.DodajMerenja(m);
+            await PoslednjaVrednost.DodajMerenja(m);
         }
 
-        public List<MerenjeResponseDto> VratiMerenjePoDanu(Guid senzor_id, LocalDate dan)
+        public async Task<List<MerenjeResponseDto>> VratiMerenjePoDanu(Guid senzor_id, LocalDate dan)
         {
-            return PoDanu.VratiMerenjaPoDanu(senzor_id, dan);
+            return await PoDanu.VratiMerenjaPoDanu(senzor_id, dan);
         }
-        public List<DTOs.Merenje.MerenjeResponseDto> VratiPoslednjeMerenje(Guid senzor_id)
+        public async Task<DTOs.Merenje.MerenjeResponseDto?> VratiPoslednjeMerenje(Guid senzor_id)
         {
-            return PoslednjaVrednost.VratiPoslednjeMerenje(senzor_id);
+            return await PoslednjaVrednost.VratiPoslednjeMerenje(senzor_id);
         }
-        public List<MerenjeResponseDto> VratiMerenjePoLokaciji(Guid lokacijaId, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
+        public async Task<List<MerenjeResponseDto>?> VratiMerenjePoLokaciji(Guid lokacijaId, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
         {
-            return PoLokaciji.VratiMerenjaPoLokaciji(lokacijaId, dan, vremeOd, vremeDo);
+            return await PoLokaciji.VratiMerenjaPoLokaciji(lokacijaId, dan, vremeOd, vremeDo);
         }
-        public List<MerenjeResponseDto> VratiMerenjePoVremenu(Guid senzor_id, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
+        public async Task<List<MerenjeResponseDto>> VratiMerenjePoVremenu(Guid senzor_id, LocalDate dan, TimeSpan vremeOd, TimeSpan vremeDo)
         {
-            return PoDanu.VratiMerenjaPoVremeneskomOpsegu(senzor_id, dan, vremeOd, vremeDo);
+            return await PoDanu.VratiMerenjaPoVremeneskomOpsegu(senzor_id, dan, vremeOd, vremeDo);
         }
     }
 }

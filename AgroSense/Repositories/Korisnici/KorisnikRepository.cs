@@ -12,26 +12,26 @@ namespace AgroSense.Repositories.Korisnici
             _session = session;
         }
 
-        public void Dodaj(KorisnikCreateDto dto)
+        public async Task Dodaj(KorisnikCreateDto dto)
         {
             var id = Guid.NewGuid();
-
-            var stmt = new SimpleStatement(@"
-                INSERT INTO korisnik
+            var ps = _session.Prepare(@"INSERT INTO korisnik
                 (id_korisnika, ime, kontakt, uloga, aktivan)
-                VALUES (?, ?, ?, ?, ?)",
-                id, dto.Ime, dto.Kontakt, dto.Uloga, dto.Aktivan
-            );
-
-            _session.Execute(stmt);
+                VALUES (?, ?, ?, ?, ?)");
+            var rs = await _session.ExecuteAsync(ps.Bind(
+                id,
+                dto.Ime,
+                dto.Kontakt,
+                dto.Uloga,
+                dto.Aktivan));
         }
 
-        public List<KorisnikResponseDto> VratiSve()
+        public async Task<List<KorisnikResponseDto>> VratiSve()
         {
-            var stmt = new SimpleStatement("SELECT id_korisnika, ime, uloga, aktivan FROM korisnik");
-            var rows = _session.Execute(stmt);
+            var ps = _session.Prepare(@"SELECT id_korisnika, ime, uloga, aktivan FROM korisnik");
+            var rs = await _session.ExecuteAsync(ps.Bind());            
 
-            return rows.Select(r => new KorisnikResponseDto
+            return rs.Select(r => new KorisnikResponseDto
             {
                 Id_korisnika = r.GetValue<Guid>("id_korisnika"),
                 Ime = r.GetValue<string>("ime"),
@@ -40,10 +40,12 @@ namespace AgroSense.Repositories.Korisnici
             }).ToList();
         }
 
-        public KorisnikViewDto? VratiPoId(Guid id)
+        public async Task<KorisnikViewDto?> VratiPoId(Guid id)
         {
-            var stmt = new SimpleStatement("SELECT * FROM korisnik WHERE id_korisnika = ?", id);
-            var row = _session.Execute(stmt).FirstOrDefault();
+            var ps = _session.Prepare(@"SELECT * FROM korisnik WHERE id_korisnika = ?");
+            var rs = await _session.ExecuteAsync(ps.Bind(id));
+
+            var row = rs.FirstOrDefault();
             if (row == null) return null;
 
             return new KorisnikViewDto
@@ -56,7 +58,7 @@ namespace AgroSense.Repositories.Korisnici
             };
         }
 
-        public void Update(Guid id, KorisnikCreateDto dto)
+        public async Task Update(Guid id, KorisnikCreateDto dto)
         {
             var stmt = new SimpleStatement(@"
                 UPDATE korisnik SET
@@ -65,13 +67,13 @@ namespace AgroSense.Repositories.Korisnici
                 dto.Ime, dto.Kontakt, dto.Uloga, dto.Aktivan, id
             );
 
-            _session.Execute(stmt);
+            await _session.ExecuteAsync(stmt);
         }
 
-        public void Delete(Guid id)
+        public async Task Delete(Guid id)
         {
             var stmt = new SimpleStatement("DELETE FROM korisnik WHERE id_korisnika = ?", id);
-            _session.Execute(stmt);
+            await _session.ExecuteAsync(stmt);
         }
     }
 }

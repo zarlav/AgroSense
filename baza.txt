@@ -1,37 +1,42 @@
 CREATE TABLE IF NOT EXISTS agrosense.proizvodne_jedinice (
-    id_jedinice UUID PRIMARY KEY,
-    naziv TEXT,
-    geo_lat DOUBLE,
-    geo_long DOUBLE,
-    tip_jedinice TEXT,
-    povrsina FLOAT,
-
-    granica_temp_min FLOAT,
-    granica_temp_max FLOAT,
-    granica_vlaznost_min FLOAT,
-    granica_vlaznost_max FLOAT,
-    granica_co2_min FLOAT,
-    granica_co2_max FLOAT,
-    granica_svetlost_min FLOAT,
-    granica_svetlost_max FLOAT,
-    granica_vlaznost_lista_min FLOAT,
-    granica_vlaznost_lista_max FLOAT,
-    granica_pritisak_vazduha_min FLOAT,
-    granica_pritisak_vazduha_max FLOAT,
-    granica_jacina_vetra_min FLOAT,
-    granica_jacina_vetra_max FLOAT,
-    granica_pritisak_u_cevima_min FLOAT,
-    granica_pritisak_u_cevima_max FLOAT,
-	 
-    vrsta_biljaka TEXT,
-    status_mreze TEXT,
-    nadmorska_visina DOUBLE,
-    odgovorno_lice TEXT,
-    opis TEXT,
+    tip_jedinice text,
+    id_jedinice uuid,
+    aktivno boolean,
     datum_postavljanja timestamp,
-    aktivno boolean
-);
+    geo_lat double,
+    geo_long double,
+    granica_co2_max float, 
+    granica_co2_min float,
+    granica_jacina_vetra_max float,
+    granica_jacina_vetra_min float,
+    granica_pritisak_u_cevima_max float,
+    granica_pritisak_u_cevima_min float,
+    granica_pritisak_vazduha_max float,
+    granica_pritisak_vazduha_min float,
+    granica_svetlost_max float, 
+    granica_svetlost_min float,
+    granica_temp_max float,
+    granica_temp_min float,
+    granica_vlaznost_lista_max float,
+    granica_vlaznost_lista_min float,
+    granica_vlaznost_max float,
+    granica_vlaznost_min float,
+    nadmorska_visina double,
+    naziv text, 
+    odgovorno_lice text,
+    opis text,
+    povrsina float,
+    status_mreze text,
+    vrsta_biljaka text,
 
+    PRIMARY KEY ((tip_jedinice, aktivno), id_jedinice))
+
+CREATE TABLE agrosense.proizvodne_jedinice_aktivne (
+    tip_jedinice text,
+    aktivno boolean,
+    id_jedinice uuid,
+    PRIMARY KEY (aktivno, id_jedinice)
+);
 
 //////////////////////ALARMI//////////////////////////////
 CREATE TABLE IF NOT EXISTS agrosense.alarmi (

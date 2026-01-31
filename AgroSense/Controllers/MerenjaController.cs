@@ -18,14 +18,14 @@ namespace AgroSense.Controllers
             _service = service;
         }
         [HttpPost]
-        public IActionResult DodajMerenje([FromBody] MerenjeCreateDto merenje)
+        public async  Task<IActionResult> DodajMerenje([FromBody] MerenjeCreateDto merenje)
         {
             if (merenje == null)
                 return BadRequest("Merenje nije poslato.");
 
             try
             {
-                _service.SacuvajMerenje(merenje);
+                await _service.SacuvajMerenje(merenje);
                 return Ok("Merenje uspesno dodato!");
             }
             catch (Exception ex)
@@ -34,13 +34,13 @@ namespace AgroSense.Controllers
             }
         }
         [HttpGet("po_vremenu")]
-        public IActionResult VratiMerenjePoVremenu([FromQuery] Guid senzorId, [FromQuery] DateTime dan, [FromQuery] TimeSpan vremeOd, [FromQuery] TimeSpan vremeDo)
+        public async Task<IActionResult> VratiMerenjePoVremenu([FromQuery] Guid senzorId, [FromQuery] DateTime dan, [FromQuery] TimeSpan vremeOd, [FromQuery] TimeSpan vremeDo)
         {
             try
             {
                 var datum = new Cassandra.LocalDate(dan.Year, dan.Month, dan.Day);
-                var rezultat = _service.VratiMerenjePoVremenu(senzorId, datum, vremeOd, vremeDo);
-                if (rezultat.Count == 0)
+                var rezultat = await _service.VratiMerenjePoVremenu(senzorId, datum, vremeOd, vremeDo);
+                if (rezultat == null || rezultat.Count == 0)
                     return NotFound("Nema izmerenih vrednosti za dati senzor.");
                 return Ok(rezultat);
             }
@@ -51,13 +51,13 @@ namespace AgroSense.Controllers
         }
 
         [HttpGet("po_lokaciji")]
-        public IActionResult VratiMerenjePoLokaciji([FromQuery] Guid lokacijaId, [FromQuery] DateTime dan, [FromQuery] TimeSpan vremeOd, [FromQuery] TimeSpan vremeDo)
+        public async Task<IActionResult> VratiMerenjePoLokaciji([FromQuery] Guid lokacijaId, [FromQuery] DateTime dan, [FromQuery] TimeSpan vremeOd, [FromQuery] TimeSpan vremeDo)
         {
             try
             {
                 var datum = new Cassandra.LocalDate(dan.Year, dan.Month, dan.Day);
-                var rezultat = _service.VratiMerenjePoLokaciji(lokacijaId, datum, vremeOd, vremeDo);
-                if (rezultat.Count == 0)
+                var rezultat = await _service.VratiMerenjePoLokaciji(lokacijaId, datum, vremeOd, vremeDo);
+                if (rezultat == null || rezultat.Count == 0)
                     return NotFound("Nema izmerenih vrednosti za dati senzor na datoj lokaciji.");
                 return Ok(rezultat);
             }
@@ -67,12 +67,12 @@ namespace AgroSense.Controllers
             }
         }
         [HttpGet("poslednje_merenje")]
-        public IActionResult VratiPoslednjeMerenje([FromQuery] Guid senzorId)
+        public async Task<IActionResult> VratiPoslednjeMerenje([FromQuery] Guid senzorId)
         {
             try
             {
-                var rezultat = _service.VratiPoslednjeMerenje(senzorId);
-                if (rezultat.Count == 0)
+                var rezultat = await _service.VratiPoslednjeMerenje(senzorId);
+                if (rezultat == null)
                     return NotFound("Nema izmerenih vrednosti za dati senzor!");
                 return Ok(rezultat);
             }

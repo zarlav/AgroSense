@@ -14,34 +14,34 @@ namespace AgroSense.Services
             _repo = repo;
         }
 
-        public void Dodaj(ProizvodnaJedinicaCreateDto dto)
+        public async Task Dodaj(ProizvodnaJedinicaCreateDto dto)
         {
-            _repo.Dodaj(dto);
+            await _repo.Dodaj(dto);
         }
 
-        public List<ProizvodnaJedinicaResponseDto> VratiSve()
+        public async Task<List<ProizvodnaJedinicaResponseDto>> VratiSve()
         {
-            return _repo.VratiSve();
+            return await _repo.VratiSve();
         }
 
-        public ProizvodnaJedinicaViewDto? VratiPoId(string tip, Guid id)
+        public async Task<ProizvodnaJedinicaViewDto?> VratiPoId(string tip,bool stanje, Guid id)
         {
-            return _repo.VratiPoId(tip, id);
+            return await _repo.VratiPoId(tip, stanje, id);
         }
 
-        public void Update(string tip, Guid id, ProizvodnaJedinicaUpdateDto dto)
+        public async Task Update(string tip, bool stanje, Guid id, ProizvodnaJedinicaUpdateDto dto)
         {
-            _repo.Update(tip, id, dto);
+            await _repo.Update(tip, stanje, id, dto);
         }
 
-        public void Obrisi(string tip, Guid id)
+        public async Task Obrisi(string tip, bool stanje, Guid id)
         {
-            _repo.Obrisi(tip, id);
+            await _repo.Obrisi(tip, stanje, id);
         }
 
-        public List<Guid> VratiSveIdjeve()
+        public async Task<List<Guid>> VratiSveIdjeve()
         {
-            return _repo.VratiSveIdjeve();
+            return await _repo.VratiSveIdjeve();
         }
     }
 }

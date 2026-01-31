@@ -11,29 +11,29 @@ namespace AgroSense.Services
         {
             senzor = _senzor;
         }
-        public void DodajSenzor(SenzorCreateDto s)
+        public async Task DodajSenzor(SenzorCreateDto s)
         {
-            senzor.DodajSenzor(s);
+            await senzor.DodajSenzor(s);
         }
 
-        public SenzorResponseDto VratiSenzor(Guid senzorId)
+        public async Task<SenzorResponseDto?> VratiSenzor(Guid senzorId)
         {
             var s = senzor.VratiSenzor(senzorId);
 
             if (s == null)
                 throw new KeyNotFoundException("Senzor ne postoji");
 
-            return s;
+            return await s;
         }
 
-        public List<SenzorIdDto> VratiSveIdSenzora()
+        public async Task<List<SenzorIdDto>> VratiSveIdSenzora()
         {
-            return senzor.VratiSveIdSenzora(); 
+            return await senzor.VratiSveIdSenzora(); 
         }
 
-        public List<SenzorResponseDto> VratiSveSenzore()
+        public async Task<List<SenzorResponseDto>> VratiSveSenzore()
         {
-            return senzor.VratiSveSenzore();
+            return  await senzor.VratiSveSenzore();
         }
     }
 }
