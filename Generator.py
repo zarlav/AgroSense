@@ -9,8 +9,8 @@ SENZORI_URL = "https://localhost:7025/api/Senzor/svi_senzori_ids"
 
 
 def generisi_temperaturu(last):
-    if last == -100 or last < 2 or last > 32:
-        return round(random.uniform(2, 32), 2)
+    if last == -100 or last < -30 or last > 42:
+        return round(random.uniform(-30, 42), 2)
     return round(random.uniform(last - 0.3, last + 0.3), 2)
 
 def generisi_vlaznost(last):
@@ -38,17 +38,17 @@ def generisi_smerVetra():
 
 def generisi_phZemljista(last):
     if last == -100:
-        return round(random.uniform(6.0, 6.8), 2)
+        return round(random.uniform(6.0, 7.0), 2)
     return round(random.uniform(last - 0.05, last + 0.05), 2)
 
 def generisi_pritisakVazduha(last):
     if last == -100:
-        return random.randint(975, 1022)
+        return random.randint(960, 1060)
     return random.randint(last - 1, last + 1)
 
 def generisi_pritisakUCevima(last):
     if last == -100:
-        return round(random.uniform(2.0, 4.0), 2)
+        return round(random.uniform(2.0, 5.0), 2)
     return round(random.uniform(last - 0.1, last + 0.1), 2)
 
 def ucitaj_senzore():

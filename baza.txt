@@ -28,8 +28,7 @@ CREATE TABLE IF NOT EXISTS agrosense.proizvodne_jedinice (
     povrsina float,
     status_mreze text,
     vrsta_biljaka text,
-
-    PRIMARY KEY ((tip_jedinice, aktivno), id_jedinice))
+    PRIMARY KEY ((tip_jedinice, aktivno), id_jedinice));
 
 CREATE TABLE agrosense.proizvodne_jedinice_aktivne (
     tip_jedinice text,
@@ -43,26 +42,19 @@ CREATE TABLE IF NOT EXISTS agrosense.alarmi (
     id_jedinice UUID,
     dan date,
     vreme_dogadjaja timestamp,
-    id_alarma UUID,
+    id_alarma timeuuid,
     id_senzora UUID,
-    tip_senzora TEXT,
     parametar TEXT,
     trenutna_vrednost DOUBLE,
-    granicna_vrednost DOUBLE,
-    stanje_pre TEXT,
-    stanje_posle TEXT,
-    prioritet TEXT,
+    granicna_vrednostmin DOUBLE,
+    granicna_vrednostmax DOUBLE,
     komentar TEXT,
-    vreme_aktivacije TIMESTAMP,
-    automatizovana_akcija BOOLEAN,
-
-    PRIMARY KEY ((id_jedinice, dan), vreme_dogadjaja , id_senzora)
+    PRIMARY KEY ((id_jedinice, dan), vreme_dogadjaja, id_alarma)
 )
 WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
 
-
 CREATE TABLE agrosense.alarmi_po_senzoru (
-    id_senzora UUID,
+    id_senzora timeuuid,
     dan DATE,
     vreme_dogadjaja TIMESTAMP,
     id_jedinice UUID,
@@ -72,20 +64,6 @@ CREATE TABLE agrosense.alarmi_po_senzoru (
     PRIMARY KEY ((id_senzora, dan), vreme_dogadjaja)
 )
 WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
-
-CREATE TABLE agrosense.alarmi_po_prioritetu (
-    prioritet TEXT,
-    dan DATE,
-    vreme_dogadjaja TIMESTAMP,
-    id_jedinice UUID,
-    id_senzora UUID,
-    parametar TEXT,
-    trenutna_vrednost DOUBLE,
-
-    PRIMARY KEY ((prioritet, dan), vreme_dogadjaja, id_jedinice)
-)
-WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
-
 
 /////////////////////////KORISNIK//////////////////////
 CREATE TABLE agrosense.korisnik (
@@ -190,3 +168,20 @@ CREATE TABLE agrosense.senzor_agregat_dnevni (
 
     PRIMARY KEY ((id_lokacije, dan), parametar)
 );
+CREATE TABLE agrosense.senzor_podatak_po_lokaciji (
+    id_lokacije uuid,
+    id_senzora uuid,
+    dan date,
+    ts timestamp,
+    temperatura float,
+    vlaznost float,
+    co2 float,
+    jacina_vetra float,
+    smer_vetra text,
+    ph_zemljista float,
+    uv_vrednost float,
+    vlaznost_lista float,
+    pritisak_vazduha float,
+    pritisak_u_cevima float,
+    PRIMARY KEY ((id_lokacije, dan), ts, id_senzora)
+) WITH CLUSTERING ORDER BY (ts DESC, id_senzora ASC)
