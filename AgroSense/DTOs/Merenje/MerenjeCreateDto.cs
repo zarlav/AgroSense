@@ -8,7 +8,7 @@ namespace AgroSense.DTOs.Merenje
         [Required]
         public Guid Id_senzora { get; set; }
         [Required]
-        public Guid Id_loakcije { get; set; }
+        public Guid Id_lokacije { get; set; }
         [Required]
         public required LocalDate Datum { get; set; }
         [Required]
@@ -30,7 +30,7 @@ namespace AgroSense.DTOs.Merenje
         public float Ph_zemljista { get; set; }
         [Required]
         [StringLength(3, MinimumLength =1)]
-        public string smer_vetra { get; set; } = string.Empty;
+        public string Smer_vetra { get; set; } = string.Empty;
         [Required]
         [Range(0,10, ErrorMessage ="UV mora biti u opsegu 0-10")]
         public float Uv_vrednost { get; set; }

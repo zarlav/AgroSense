@@ -19,23 +19,22 @@ namespace AgroSense.Controllers
         }
 
       [HttpGet("po_jedinici")]
-public IActionResult VratiAlarmePoJedinici(
+public async Task<IActionResult> VratiAlarmePoJedinici(
     [FromQuery] Guid idJedinice,
     [FromQuery] DateTime dan,
-    [FromQuery] DateTime vremeOd,
-    [FromQuery] DateTime vremeDo)
+    [FromQuery] TimeSpan vremeOd,
+    [FromQuery] TimeSpan vremeDo)
 {
     try
     {
-        var cassandraDan = new LocalDate(dan.Year, dan.Month, dan.Day);
-
-        var alarmi = _alarmService.VratiAlarmePoJedinici(
+        var datum = new Cassandra.LocalDate(dan.Year, dan.Month, dan.Day);
+        var alarmi = await _alarmService.VratiAlarmePoJedinici(
             idJedinice,
-            cassandraDan,
+            datum,
             vremeOd,
             vremeDo);
 
-        if (alarmi.Count == 0)
+        if (alarmi == null || alarmi.Count == 0)
             return NotFound("Nema alarma za dati period.");
 
         return Ok(alarmi);

@@ -25,14 +25,14 @@ namespace AgroSense.Repositories.Merenja
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             await _session.ExecuteAsync(ps.Bind(
             merenje.Id_senzora,
-                merenje.Id_loakcije,
+                merenje.Id_lokacije,
                 merenje.Datum,
                 merenje.Ts,
                 merenje.Temperatura,
                 merenje.Vlaznost,
                 merenje.Co2,
                 merenje.Jacina_vetra,
-                merenje.smer_vetra,
+                merenje.Smer_vetra,
                 merenje.Ph_zemljista,
                 merenje.Uv_vrednost,
                 merenje.Vlaznost_lista,

@@ -24,14 +24,14 @@ namespace AgroSense.Repositories.Merenja
 
             var rs = await _session.ExecuteAsync(ps.Bind(
                 merenje.Id_senzora,
-                merenje.Id_loakcije,
+                merenje.Id_lokacije,
                 merenje.Datum,
                 merenje.Ts,
                 merenje.Temperatura,
                 merenje.Vlaznost,
                 merenje.Co2,
                 merenje.Jacina_vetra,
-                merenje.smer_vetra,
+                merenje.Smer_vetra,
                 merenje.Ph_zemljista,
                 merenje.Uv_vrednost,
                 merenje.Vlaznost_lista,
@@ -45,7 +45,7 @@ namespace AgroSense.Repositories.Merenja
             DateTime kraj = osnovniDatum.Add(vremeDo);
 
             var ps = _session.Prepare(@"
-                SELECT id_senzora, id_lokacije, dan, ts,
+                SELECT id_lokacije,id_senzora, dan, ts,
                 temperatura, vlaznost, co2, jacina_vetra,
                 smer_vetra, ph_zemljista, uv_vrednost,
                 vlaznost_lista, pritisak_vazduha, pritisak_u_cevima
@@ -56,6 +56,7 @@ namespace AgroSense.Repositories.Merenja
 
             return rs.Select(row => new DTOs.Merenje.MerenjeResponseDto
             {
+                Id_senzora = row.GetValue<Guid>("id_senzora"),
                 Datum = row.GetValue<LocalDate>("dan"),
                 Ts = row.GetValue<DateTime>("ts"),
                 Temperatura = row.GetValue<float>("temperatura"),

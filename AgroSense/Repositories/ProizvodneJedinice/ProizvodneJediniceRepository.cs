@@ -46,7 +46,7 @@ namespace AgroSense.Repositories.ProizvodneJedinice
 
             if(dto.Aktivno)
             {
-                batch.Add(ps1.Bind(id, dto.Tip_jedinice));
+                batch.Add(ps1.Bind(dto.Tip_jedinice, dto.Aktivno, id));
             }
 
             await _session.ExecuteAsync(batch);
@@ -54,7 +54,7 @@ namespace AgroSense.Repositories.ProizvodneJedinice
 
         public async Task<List<ProizvodnaJedinicaResponseDto>> VratiSve()
         {
-            var ps = _session.Prepare("SELECT * FROM proizvodne_jedinice WHERE aktivno=true");
+            var ps = _session.Prepare("SELECT tip_jedinice, id_jedinice,naziv, povrsina,aktivno,vrsta_biljaka,odgovorno_lice  FROM proizvodne_jedinice ");
             var rs = await _session.ExecuteAsync(ps.Bind());
 
             return rs.Select(r => new ProizvodnaJedinicaResponseDto
@@ -187,6 +187,16 @@ namespace AgroSense.Repositories.ProizvodneJedinice
             var ps = _session.Prepare("SELECT id_jedinice FROM proizvodne_jedinice_aktivne WHERE aktivno=true");
             var rs = await _session.ExecuteAsync(ps.Bind());
             return rs.Select(r => r.GetValue<Guid>("id_jedinice")).ToList();
+        }
+
+        public async Task<String?> VratiTipAktivneJedinice(Guid id_jedinice)
+        {
+            var ps = _session.Prepare(@"SELECT tip_jedinice FROM proizvodne_jedinice_aktivne WHERE aktivno=? AND id_jedinice=?");
+            var rs = await _session.ExecuteAsync(ps.Bind(true, id_jedinice));
+            var rez = rs.FirstOrDefault();
+            if (rez == null)
+                return null;
+            return rez.GetValue<string>("tip_jedinice");
         }
     }
 }

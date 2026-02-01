@@ -4,6 +4,7 @@ namespace AgroSense.DTOs.Merenje
 {
     public class MerenjeResponseDto
     {
+        public Guid Id_senzora { get; set; }
         public required LocalDate Datum { get; set; }
         public DateTime Ts { get; set; }
         public float Temperatura { get; set; }

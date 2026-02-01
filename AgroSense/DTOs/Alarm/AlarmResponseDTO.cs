@@ -1,19 +1,16 @@
-﻿public class AlarmResponseDTO
+﻿using Cassandra;
+using System.ComponentModel.DataAnnotations;
+
+public class AlarmResponseDTO
 {
-    public Guid IdAlarma { get; set; }
-    public Guid IdSenzora { get; set; }
+    public Guid Id_jedinice { get; set; }
+    public Guid Id_senzora { get; set; }
+    public required LocalDate Dan { get; set; }
+    public DateTime Vreme_dogadjaja { get; set; }
+    public string Parametar { get; set; } = string.Empty;
+    public double Trenutna_vrednost { get; set; }
+    public double Granicna_vrednostMin { get; set; }
+    public double Granicna_vrednostMax { get; set; }
+    public string Komentar { get; set; } = string.Empty;
 
-    public string TipSenzora { get; set; }
-    public string Parametar { get; set; }
-
-    public double TrenutnaVrednost { get; set; }
-    public double GranicnaVrednost { get; set; }
-
-    public string StanjePre { get; set; }
-    public string StanjePosle { get; set; }
-
-    public string Prioritet { get; set; }
-    public string Komentar { get; set; }
-
-    public DateTime VremeAktivacije { get; set; }
 }
