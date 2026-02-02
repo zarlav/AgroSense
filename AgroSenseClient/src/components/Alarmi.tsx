@@ -1,113 +1,118 @@
 import { useState } from "react";
 import "./Alarmi.css";
 
-interface Alarm {
-  tipSenzora: string;
+interface AlarmDto {
+  id_jedinice: string;
+  id_senzora: string;
+  dan: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  vreme_dogadjaja: string;
   parametar: string;
-  trenutnaVrednost: number;
-  granicnaVrednost: number;
-  stanjePre: string;
-  stanjePosle: string;
-  prioritet: string;
-  vremeAktivacije: string;
+  trenutna_vrednost: number;
+  granicna_vrednostMin: number;
+  granicna_vrednostMax: number;
   komentar: string;
 }
 
 export default function Alarmi() {
-  const [lokacijaId, setLokacijaId] = useState("");
+  const [idJedinice, setIdJedinice] = useState("");
   const [dan, setDan] = useState("");
-  const [alarmi, setAlarmi] = useState<Alarm[]>([]);
+  const [vremeOd, setVremeOd] = useState("");
+  const [vremeDo, setVremeDo] = useState("");
+  const [alarmi, setAlarmi] = useState<AlarmDto[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const prikaziAlarme = async () => {
-    if (!lokacijaId || !dan) {
-      alert("Unesi parcelu (lokacijaId) i datum");
+  const fetchAlarmi = () => {
+    if (!idJedinice || !dan || !vremeOd || !vremeDo) {
+      setError("Popuni sva polja");
       return;
     }
 
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `http://localhost:5161/api/alarm/po_lokaciji?lokacijaId=${lokacijaId}&dan=${dan}`
-      );
+    setLoading(true);
+    setError(null);
 
-      if (!response.ok) {
-        setAlarmi([]);
-        alert("Nema alarma za izabranu parcelu ili greška u API-ju");
-        return;
-      }
-
-      const data = await response.json();
-      // safety: ako polja nedostaju, dodeli default vrednosti
-      const safeData: Alarm[] = data.map((a: any) => ({
-        tipSenzora: a.tipSenzora ?? "",
-        parametar: a.parametar ?? "",
-        trenutnaVrednost: a.trenutnaVrednost ?? 0,
-        granicnaVrednost: a.granicnaVrednost ?? 0,
-        stanjePre: a.stanjePre ?? "",
-        stanjePosle: a.stanjePosle ?? "",
-        prioritet: a.prioritet ?? "",
-        vremeAktivacije: a.vremeAktivacije ?? "",
-        komentar: a.komentar ?? ""
-      }));
-
-      setAlarmi(safeData);
-    } catch (err) {
-      console.error(err);
-      alert("Greška pri učitavanju alarma");
-      setAlarmi([]);
-    } finally {
-      setLoading(false);
-    }
+    fetch(
+      `http://localhost:5161/api/Alarm/po_jedinici` +
+        `?idJedinice=${idJedinice}` +
+        `&dan=${dan}` +
+        `&vremeOd=${vremeOd}:00` +
+        `&vremeDo=${vremeDo}:00`
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Nema alarma za dati period");
+        return res.json();
+      })
+      .then((data: AlarmDto[]) => setAlarmi(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   };
 
   return (
     <div className="alarmi">
-      <h2>Alarmi po parceli</h2>
+      <h2>Alarmi po proizvodnoj jedinici</h2>
 
       <div className="alarmi-Forma">
         <div className="alarmi-Polje">
-          <label>Lokacija ID (parcela)</label>
+          <label>ID proizvodne jedinice</label>
           <input
-            type="text"
             className="alarmiInput"
-            placeholder="Unesi ID lokacije"
-            value={lokacijaId}
-            onChange={(e) => setLokacijaId(e.target.value)}
+            value={idJedinice}
+            onChange={(e) => setIdJedinice(e.target.value)}
+            placeholder="GUID jedinice"
           />
         </div>
 
         <div className="alarmi-Polje">
           <label>Datum</label>
           <input
-            type="date"
             className="alarmiInput"
+            type="date"
             value={dan}
             onChange={(e) => setDan(e.target.value)}
           />
         </div>
 
-        <button className="alarmi-btn" onClick={prikaziAlarme}>
+        <div className="alarmi-Polje">
+          <label>Vreme od</label>
+          <input
+            className="alarmiInput"
+            type="time"
+            value={vremeOd}
+            onChange={(e) => setVremeOd(e.target.value)}
+          />
+        </div>
+
+        <div className="alarmi-Polje">
+          <label>Vreme do</label>
+          <input
+            className="alarmiInput"
+            type="time"
+            value={vremeDo}
+            onChange={(e) => setVremeDo(e.target.value)}
+          />
+        </div>
+
+        <button className="alarmi-btn" onClick={fetchAlarmi}>
           Prikaži alarme
         </button>
       </div>
 
       {loading && <p className="alarmi-loading">Učitavanje...</p>}
-
-      {!loading && alarmi.length === 0 && <p className="alarmi-error">Nema alarma za izabranu parcelu.</p>}
+      {error && <p className="alarmi-error">{error}</p>}
 
       {alarmi.length > 0 && (
         <div className="alarmi-table-wrapper">
           <table className="alarmi-table">
             <thead>
               <tr>
-                <th>Tip senzora</th>
                 <th>Parametar</th>
                 <th>Trenutna</th>
-                <th>Granica</th>
-                <th>Pre</th>
-                <th>Posle</th>
-                <th>Prioritet</th>
+                <th>Min</th>
+                <th>Max</th>
                 <th>Vreme</th>
                 <th>Komentar</th>
               </tr>
@@ -115,14 +120,11 @@ export default function Alarmi() {
             <tbody>
               {alarmi.map((a, i) => (
                 <tr key={i}>
-                  <td>{a.tipSenzora}</td>
                   <td>{a.parametar}</td>
-                  <td>{a.trenutnaVrednost}</td>
-                  <td>{a.granicnaVrednost}</td>
-                  <td>{a.stanjePre}</td>
-                  <td>{a.stanjePosle}</td>
-                  <td>{a.prioritet}</td>
-                  <td>{a.vremeAktivacije ? new Date(a.vremeAktivacije).toLocaleString() : ""}</td>
+                  <td>{a.trenutna_vrednost}</td>
+                  <td>{a.granicna_vrednostMin}</td>
+                  <td>{a.granicna_vrednostMax}</td>
+                  <td>{new Date(a.vreme_dogadjaja).toLocaleString()}</td>
                   <td>{a.komentar}</td>
                 </tr>
               ))}
