@@ -19,14 +19,14 @@ namespace AgroSense.Controllers
         }
 
       [HttpGet("po_jedinici")]
-public async Task<IActionResult> VratiAlarmePoJedinici(
-    [FromQuery] Guid idJedinice,
-    [FromQuery] DateTime dan,
-    [FromQuery] TimeSpan vremeOd,
-    [FromQuery] TimeSpan vremeDo)
-{
-    try
+    public async Task<IActionResult> VratiAlarmePoJedinici(
+        [FromQuery] Guid idJedinice,
+        [FromQuery] DateTime dan,
+        [FromQuery] TimeSpan vremeOd,
+        [FromQuery] TimeSpan vremeDo)
     {
+        try
+        {
         var datum = new Cassandra.LocalDate(dan.Year, dan.Month, dan.Day);
         var alarmi = await _alarmService.VratiAlarmePoJedinici(
             idJedinice,
@@ -38,12 +38,32 @@ public async Task<IActionResult> VratiAlarmePoJedinici(
             return NotFound("Nema alarma za dati period.");
 
         return Ok(alarmi);
-    }
-    catch (Exception ex)
-    {
-        return StatusCode(500, ex.Message);
-    }
-}
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+        }
+        [HttpGet("alarmi_po_senzoru")]
+        public async Task<IActionResult> VratiAlarmePoSenzoru(
+        [FromQuery] Guid idSenzora,
+        [FromQuery] DateTime dan,
+        [FromQuery] TimeSpan vremeOd,
+        [FromQuery] TimeSpan vremeDo)
+        {
+            try
+            {
+                var datum = new Cassandra.LocalDate(dan.Year, dan.Month, dan.Day);
+                var alarmi = await _alarmService.VratiAlarmePoSenzoru(idSenzora, datum, vremeOd, vremeDo);
+                if (alarmi == null || alarmi.Count == 0)
+                    return NotFound("Nema alarma za dati senzor!");
+                return Ok(alarmi);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
+        }
 
-    }    
+    }
 }

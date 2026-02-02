@@ -1,3 +1,4 @@
+using AgroSense.Repositories.Alarmi;
 using AgroSense.Repositories.Korisnici;
 using AgroSense.Repositories.Merenja;
 using AgroSense.Repositories.ProizvodneJedinice;
@@ -29,6 +30,7 @@ builder.Services.AddScoped<SenzorRepository>();
 builder.Services.AddScoped<ProizvodneJediniceRepository>();
 builder.Services.AddScoped<KorisnikRepository>();
 builder.Services.AddScoped<AlarmRepository>();
+builder.Services.AddScoped<AlarmiPoSenzoruRepository>();
 
 
 builder.Services.AddScoped<SenzorService>();

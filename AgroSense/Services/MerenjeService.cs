@@ -34,15 +34,10 @@ namespace AgroSense.Services
                 if (PoLokaciji == null) throw new Exception("PoLokaciji je null!");
                 if (PoslednjaVrednost == null) throw new Exception("PoslednjaVrednost je null!");
                 if (AlarmSer == null) throw new Exception("AlarmSer je null!");
-                Console.WriteLine("Pre PoDanu");
                 await PoDanu.DodajMerenja(m);
-                Console.WriteLine("Pre PoLokaciji");
                 await PoLokaciji.DodajMerenja(m);
-                Console.WriteLine("Pre PoslednjaVrednost");
                 await PoslednjaVrednost.DodajMerenja(m);
-                Console.WriteLine("Pre AlarmSer");
                 await AlarmSer.ProveriAlarm(m.Id_lokacije, true);
-                Console.WriteLine("Sve proslo");
             }
             catch (Exception ex)
             {
@@ -50,7 +45,6 @@ namespace AgroSense.Services
                 throw;
             }
         }
-
         public async Task<List<MerenjeResponseDto>> VratiMerenjePoDanu(Guid senzor_id, LocalDate dan)
         {
             return await PoDanu.VratiMerenjaPoDanu(senzor_id, dan);

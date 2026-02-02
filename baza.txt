@@ -54,13 +54,11 @@ CREATE TABLE IF NOT EXISTS agrosense.alarmi (
 WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
 
 CREATE TABLE agrosense.alarmi_po_senzoru (
-    id_senzora timeuuid,
+    id_senzora UUID, 
     dan DATE,
     vreme_dogadjaja TIMESTAMP,
     id_jedinice UUID,
-    prioritet TEXT,
-    parametar TEXT,
-
+    komentar TEXT,
     PRIMARY KEY ((id_senzora, dan), vreme_dogadjaja)
 )
 WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
@@ -109,13 +107,6 @@ CREATE TABLE IF NOT EXISTS agrosense.senzor (
     tip TEXT,
     status TEXT
 );
-CREATE TABLE agrosense.senzor_health (
-    id_senzora UUID PRIMARY KEY,
-    last_seen TIMESTAMP,
-    battery_level INT,
-    signal_strength INT,
-    status TEXT
-);
 CREATE TABLE IF NOT EXISTS agrosense.senzor_po_lokaciji (
     id_senzora UUID,
     id_lokacije UUID,
@@ -158,16 +149,6 @@ CREATE TABLE IF NOT EXISTS agrosense.senzor_poslednja_vrednost (
     pritisak_u_cevima FLOAT
 );  
 
-CREATE TABLE agrosense.senzor_agregat_dnevni (
-    id_lokacije UUID,
-    dan DATE,
-    parametar TEXT,        
-    avg_vrednost DOUBLE,
-    min_vrednost DOUBLE,
-    max_vrednost DOUBLE,
-
-    PRIMARY KEY ((id_lokacije, dan), parametar)
-);
 CREATE TABLE agrosense.senzor_podatak_po_lokaciji (
     id_lokacije uuid,
     id_senzora uuid,
