@@ -161,7 +161,6 @@ namespace AgroSense.Repositories.ProizvodneJedinice
             {
                 batch.Add(ps1Delete.Bind(true, id));
             }
-
             await _session.ExecuteAsync(batch);
         }
 

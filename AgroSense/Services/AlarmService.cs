@@ -40,8 +40,9 @@ namespace AgroSense.Services
         public async Task ProveriAlarm(Guid idJedinice, bool stanje)
         {
             DateTime sada = DateTime.UtcNow;
-            var localDate = new Cassandra.LocalDate(sada.Year, sada.Month, sada.Day);
-            var vremeTrenutno = sada.TimeOfDay;
+            DateTime trenutnoVreme = sada.ToLocalTime();
+            var localDate = new Cassandra.LocalDate(trenutnoVreme.Year, trenutnoVreme.Month, trenutnoVreme.Day);
+            var vremeTrenutno = trenutnoVreme.TimeOfDay;
             var vremePreMinuta = vremeTrenutno - TimeSpan.FromMinutes(1);
             vremeTrenutno += TimeSpan.FromMinutes(1);
 
@@ -49,16 +50,20 @@ namespace AgroSense.Services
             if (tip == null)
                 throw new InvalidOperationException($"Ne postoji aktivna proizvodna jedinica sa ID = {idJedinice}");
             var rezPJ = await _repositoryProizvodnaJedinica.VratiPoId(tip.ToString(), stanje, idJedinice);
-
+            if (rezPJ == null)
+                throw new InvalidOperationException($"Ne postoji aktivna proizvodna jedinica sa ID = {idJedinice}");
             var rezMPL = await _repositoryPoLokaciji.VratiMerenjaPoLokaciji(
                 idJedinice,
                 localDate,
                 vremePreMinuta,
                 vremeTrenutno
             );
+            if (rezMPL == null)
+                throw new InvalidOperationException($"Nije pronadjeno merenje po lokaciji!!!");
             var poslednjeMerenje = rezMPL.LastOrDefault();
             if(poslednjeMerenje != null && rezPJ != null)
             {
+
                 var temp = poslednjeMerenje.Temperatura;
                 var co2 = poslednjeMerenje.Co2;
                 var vlaznostLista = poslednjeMerenje.Vlaznost_lista;
@@ -68,7 +73,7 @@ namespace AgroSense.Services
                 var uv = poslednjeMerenje.Uv_vrednost;
                 var tasks = new List<Task>();
 
-                if ((float)temp < (float)rezPJ.Granica_temp_min || (float)temp > (float)rezPJ.Granica_temp_max)
+                if (temp < rezPJ.Granica_temp_min || temp > rezPJ.Granica_temp_max)
                 {
                     var acdto = new AlarmCreateDTO
                     {
@@ -96,6 +101,7 @@ namespace AgroSense.Services
                 }
                 if(co2 < rezPJ.Granica_co2_min || co2 > rezPJ.Granica_co2_max)
                 {
+
                     var acdto = new AlarmCreateDTO
                     {
                         Id_jedinice = idJedinice,
@@ -141,15 +147,12 @@ namespace AgroSense.Services
                         Id_jedinice = idJedinice,
                         Komentar = $"Vlaznost lista je van dozvoljenog opsega ({rezPJ.Granica_vlaznost_lista_min}-{rezPJ.Granica_vlaznost_lista_max})"
                     };
-                    if (acdto != null && acdto1 != null)
-                    {
                      tasks.Add(_repository.KreirajAlarm(acdto));
                      tasks.Add(_repositoryAlarmiPoSenzoru.DodajAlarmPoSenzoru(acdto1));
-                    }
-
                 }
                 if(vlaznost < rezPJ.Granica_vlaznost_min || vlaznost > rezPJ.Granica_vlaznost_max)
                 {
+
                     var acdto = new AlarmCreateDTO
                     {
                         Id_jedinice = idJedinice,
@@ -170,14 +173,12 @@ namespace AgroSense.Services
                         Id_jedinice = idJedinice,
                         Komentar = $"Vlaznost vazduha je van dozvoljenog opsega ({rezPJ.Granica_vlaznost_min}-{rezPJ.Granica_vlaznost_max})"
                     };
-                    if (acdto != null && acdto1 != null)
-                    {
                         tasks.Add(_repository.KreirajAlarm(acdto));
                         tasks.Add(_repositoryAlarmiPoSenzoru.DodajAlarmPoSenzoru(acdto1));
-                    }
                 }
                 if (pritisakVazduha < rezPJ.Granica_pritisak_vazduha_min || pritisakVazduha > rezPJ.Granica_pritisak_vazduha_max)
                 {
+
                     var acdto = new AlarmCreateDTO
                     {
                         Id_jedinice = idJedinice,
@@ -198,11 +199,8 @@ namespace AgroSense.Services
                         Id_jedinice = idJedinice,
                         Komentar = $"Pritisak vazduha je van dozvoljenog opsega ({rezPJ.Granica_pritisak_vazduha_min}-{rezPJ.Granica_pritisak_vazduha_max})"
                     };
-                    if (acdto != null && acdto1 != null)
-                    {
                         tasks.Add(_repository.KreirajAlarm(acdto));
                         tasks.Add(_repositoryAlarmiPoSenzoru.DodajAlarmPoSenzoru(acdto1));
-                    }
                 }
                 if (pritisakUCevima < rezPJ.Granica_pritisak_u_cevima_min || pritisakUCevima > rezPJ.Granica_pritisak_u_cevima_max)
                 {
@@ -226,14 +224,12 @@ namespace AgroSense.Services
                         Id_jedinice = idJedinice,
                         Komentar = $"Pritisak u cevima je van dozvoljenog opsega ({rezPJ.Granica_pritisak_u_cevima_min}-{rezPJ.Granica_pritisak_u_cevima_max})"
                     };
-                    if (acdto != null && acdto1 != null)
-                    {
                         tasks.Add(_repository.KreirajAlarm(acdto));
                         tasks.Add(_repositoryAlarmiPoSenzoru.DodajAlarmPoSenzoru(acdto1));
-                    }
                 }
                 if (uv < rezPJ.Granica_svetlost_min || uv > rezPJ.Granica_svetlost_max)
                 {
+
                     var acdto = new AlarmCreateDTO
                     {
                         Id_jedinice = idJedinice,
@@ -254,11 +250,8 @@ namespace AgroSense.Services
                         Id_jedinice = idJedinice,
                         Komentar = $"Uv zracenje je van dozvoljenog opsega ({rezPJ.Granica_svetlost_min}-{rezPJ.Granica_svetlost_max})"
                     };
-                    if (acdto != null && acdto1 != null)
-                    {
                         tasks.Add(_repository.KreirajAlarm(acdto));
                         tasks.Add(_repositoryAlarmiPoSenzoru.DodajAlarmPoSenzoru(acdto1));
-                    }
 
                 }
                 await Task.WhenAll(tasks);

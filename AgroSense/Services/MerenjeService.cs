@@ -36,7 +36,7 @@ namespace AgroSense.Services
                 if (AlarmSer == null) throw new Exception("AlarmSer je null!");
                 await PoDanu.DodajMerenja(m);
                 await PoLokaciji.DodajMerenja(m);
-                await PoslednjaVrednost.DodajMerenja(m);
+                await PoslednjaVrednost.DodajMerenja(m);;
                 await AlarmSer.ProveriAlarm(m.Id_lokacije, true);
             }
             catch (Exception ex)

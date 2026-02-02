@@ -9,19 +9,23 @@ namespace AgroSense.Repositories.Alarmi
     public class AlarmiPoSenzoruRepository
     {
         private readonly Cassandra.ISession _session;
+        private readonly PreparedStatement _psKreirajAlarm;
 
         public AlarmiPoSenzoruRepository(Cassandra.ISession session)
         {
             _session = session;
+            _psKreirajAlarm = _session.Prepare(@"INSERT INTO alarmi_po_senzoru
+            (id_senzora,id_alarma, dan, vreme_dogadjaja, id_jedinice, komentar)
+            VALUES(?, ?,?, ?, ?, ?)");
         }
         public async Task DodajAlarmPoSenzoru(AlarmCreateDTO adto)
         {
-            var ps = _session.Prepare(@"INSERT INTO alarmi_po_senzoru
-            (id_senzora, dan, vreme_dogadjaja, id_jedinice, komentar)
-            VALUES(?, ?, ?, ?, ?)");
-           
-            var rs = ps.Bind(
+            var id = TimeUuid.NewId();
+            if (adto == null)
+                throw new ArgumentNullException(nameof(adto));
+            var rs = _psKreirajAlarm.Bind(
                 adto.Id_senzora,
+                id,
                 adto.Dan,
                 adto.Vreme_dogadjaja,
                 adto.Id_jedinice,
@@ -30,7 +34,6 @@ namespace AgroSense.Repositories.Alarmi
 
             await _session.ExecuteAsync(rs).ConfigureAwait(false);
         }
-
 
         public async Task<List<AlarmResponseDTO>> VratiAlarmePoSenzoru(Guid senzorId, LocalDate dan, TimeSpan _vremeOd, TimeSpan _vremeDo)
         {
