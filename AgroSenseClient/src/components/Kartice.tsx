@@ -23,7 +23,7 @@ export default function Kartice() {
       case "Proizvodne jedinice":
         return <ProizvodneJedinice />;
       case "Alarmi":
-        return <Alarmi />;  
+        return <Alarmi />;
       default:
         return null;
     }
@@ -32,7 +32,14 @@ export default function Kartice() {
   return (
     <div className="kartice">
       <div className="tab-nav">
-        {["Senzori", "Poslednje merenje", "Merenja po vremenu", "Merenja po lokaciji", "Proizvodne jedinice", "Alarmi"].map((tab) => (
+        {[
+          "Senzori",
+          "Poslednje merenje",
+          "Merenja po vremenu",
+          "Merenja po lokaciji",
+          "Proizvodne jedinice",
+          "Alarmi",
+        ].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -43,9 +50,7 @@ export default function Kartice() {
         ))}
       </div>
 
-      <div className="tab-content">
-        {renderContent()}
-      </div>
+      <div className="tab-content">{renderContent()}</div>
     </div>
   );
 }

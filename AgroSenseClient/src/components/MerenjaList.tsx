@@ -29,7 +29,7 @@ export default function MerenjaList() {
   const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch("https://localhost:7025/api/Senzor/svi_senzori")
+        fetch("http://localhost:5161/api/Senzor/svi_senzori")
           .then(res => {
               if(!res.ok) throw new Error("Greska pri ocitavanju id-jeva senzora!");
               return res.json();
