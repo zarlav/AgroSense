@@ -35,7 +35,7 @@ namespace AgroSense.Repositories.Alarmi
             await _session.ExecuteAsync(rs).ConfigureAwait(false);
         }
 
-        public async Task<List<AlarmResponseDTO>> VratiAlarmePoSenzoru(Guid senzorId, LocalDate dan, TimeSpan _vremeOd, TimeSpan _vremeDo)
+        public async Task<List<AlarmPoSenzoruResponseDTO>> VratiAlarmePoSenzoru(Guid senzorId, LocalDate dan, TimeSpan _vremeOd, TimeSpan _vremeDo)
         {
             DateTime osnovniDatum = new DateTime(dan.Year, dan.Month, dan.Day);
             DateTime vremeOd = osnovniDatum.Add(_vremeOd);
@@ -45,7 +45,7 @@ namespace AgroSense.Repositories.Alarmi
 
             var rs = await _session.ExecuteAsync(ps.Bind(senzorId, dan, vremeOd, vremeDo));
 
-            return rs.Select(row => new AlarmResponseDTO()
+            return rs.Select(row => new AlarmPoSenzoruResponseDTO()
             {
                 Dan = row.GetValue<LocalDate>("dan"),
                 Vreme_dogadjaja = row.GetValue<DateTime>("vreme_dogadjaja"),

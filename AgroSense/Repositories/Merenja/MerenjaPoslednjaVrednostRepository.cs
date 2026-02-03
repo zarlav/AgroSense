@@ -16,12 +16,11 @@ namespace AgroSense.Repositories.Merenja
         {
             if (merenje == null)
                 return;
-            var ps = _session.Prepare(@"INSERT INTO senzor_poslednja_vrednost (id_senzora,
-            id_lokacije, dan, ts, temperatura, vlaznost, co2, 
+            var ps = _session.Prepare(@"INSERT INTO senzor_poslednja_vrednost ( id_lokacije,id_senzora, dan, ts, temperatura, vlaznost, co2, 
             jacina_vetra, smer_vetra, ph_zemljista, uv_vrednost,vlaznost_lista, pritisak_vazduha, pritisak_u_cevima)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-            var rs = await _session.ExecuteAsync(ps.Bind(
+            var bound = ps.Bind(
                 merenje.Id_senzora,
                 merenje.Id_lokacije,
                 merenje.Datum,
@@ -35,11 +34,12 @@ namespace AgroSense.Repositories.Merenja
                 merenje.Uv_vrednost,
                 merenje.Vlaznost_lista,
                 merenje.Pritisak_vazduha,
-                merenje.Pritisak_u_cevima));
+                merenje.Pritisak_u_cevima);
+            await _session.ExecuteAsync(bound).ConfigureAwait(false);
         }
         public async Task<DTOs.Merenje.MerenjeResponseDto?> VratiPoslednjeMerenje(Guid senzorID)
         {
-            var ps = _session.Prepare(@"SELECT id_senzora, id_lokacije, dan, ts,
+            var ps = _session.Prepare(@"SELECT  id_lokacije, id_senzora, dan, ts,
                  temperatura, vlaznost, co2, jacina_vetra,
                  smer_vetra, ph_zemljista, uv_vrednost,
                  vlaznost_lista, pritisak_vazduha, pritisak_u_cevima

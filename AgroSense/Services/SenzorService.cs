@@ -1,5 +1,4 @@
-﻿using AgroSense.Domain;
-using AgroSense.DTOs.Senzor;
+﻿using AgroSense.DTOs.Senzor;
 using AgroSense.Repositories.Senzor;
 
 namespace AgroSense.Services

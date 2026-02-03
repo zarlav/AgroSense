@@ -32,19 +32,19 @@ namespace AgroSense.Services
             return await _repository.VratiAlarmePoJedinici(idJedinice, dan, vremeOd, vremeDo);
         }
 
-        public async Task<List<AlarmResponseDTO>> VratiAlarmePoSenzoru(Guid senzorId, LocalDate dan, TimeSpan _vremeOd, TimeSpan _vremeDo)
+        public async Task<List<AlarmPoSenzoruResponseDTO>> VratiAlarmePoSenzoru(Guid senzorId, LocalDate dan, TimeSpan _vremeOd, TimeSpan _vremeDo)
         {
             return await _repositoryAlarmiPoSenzoru.VratiAlarmePoSenzoru(senzorId, dan, _vremeOd, _vremeDo);
         }
 
-        public async Task ProveriAlarm(Guid idJedinice, bool stanje)
+        public async Task ProveriAlarm(Guid idJedinice, bool stanje, DateTime _vremeSlanja)
         {
-            DateTime sada = DateTime.UtcNow;
-            DateTime trenutnoVreme = sada.ToLocalTime();
-            var localDate = new Cassandra.LocalDate(trenutnoVreme.Year, trenutnoVreme.Month, trenutnoVreme.Day);
-            var vremeTrenutno = trenutnoVreme.TimeOfDay;
-            var vremePreMinuta = vremeTrenutno - TimeSpan.FromMinutes(1);
-            vremeTrenutno += TimeSpan.FromMinutes(1);
+            var localDate = new Cassandra.LocalDate(_vremeSlanja.Year, _vremeSlanja.Month, _vremeSlanja.Day);
+            var vremeSlanja = _vremeSlanja.TimeOfDay;
+            var vremePreMinuta = vremeSlanja - TimeSpan.FromMinutes(1);
+            var vremeNakonMinuta = vremeSlanja + TimeSpan.FromMinutes(1);
+
+            Console.WriteLine($"Vreme kada je poslato {vremeSlanja} /n vreme pre minuta: {vremePreMinuta} / vreme nakon minuta {vremeNakonMinuta}");
 
             var tip = await _repositoryProizvodnaJedinica.VratiTipAktivneJedinice(idJedinice);
             if (tip == null)
@@ -56,7 +56,7 @@ namespace AgroSense.Services
                 idJedinice,
                 localDate,
                 vremePreMinuta,
-                vremeTrenutno
+                vremeNakonMinuta
             );
             if (rezMPL == null)
                 throw new InvalidOperationException($"Nije pronadjeno merenje po lokaciji!!!");

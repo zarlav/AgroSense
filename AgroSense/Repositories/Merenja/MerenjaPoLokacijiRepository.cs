@@ -1,5 +1,4 @@
-﻿using AgroSense.Domain;
-using Cassandra;
+﻿using Cassandra;
 using System.Threading.Tasks;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 

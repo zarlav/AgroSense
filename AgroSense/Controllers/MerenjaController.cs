@@ -1,5 +1,4 @@
-﻿using AgroSense.Domain;
-using AgroSense.DTOs.Merenje;
+﻿using AgroSense.DTOs.Merenje;
 using AgroSense.Repositories.Merenja;
 using AgroSense.Services;
 using Cassandra;

@@ -3,6 +3,7 @@ import "./SenzoriList.css";
 
 export interface SenzorDto {
   senzorId: number;
+  lokacijaId: number,
   naziv: string;
   proizvodjac: string;
   model: string;

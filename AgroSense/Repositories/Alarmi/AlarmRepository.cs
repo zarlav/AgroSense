@@ -1,4 +1,3 @@
-using AgroSense.Domain;
 using AgroSense.DTOs.Alarm;
 using Cassandra;
 using System;

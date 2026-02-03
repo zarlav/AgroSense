@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./Alarmi.css";
+
+export type ProizvodnaJedinicaIdsResponse = string[];
 
 interface AlarmDto {
   id_jedinice: string;
@@ -25,6 +27,22 @@ export default function Alarmi() {
   const [alarmi, setAlarmi] = useState<AlarmDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [proizvodneJedinice, setJedinice] =
+    useState<ProizvodnaJedinicaIdsResponse>([]);
+
+  useEffect(() => {
+    fetch("https://localhost:7025/api/Senzor/svi_senzori")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Greška pri očitavanju ID-jeva parcela!");
+        }
+        return res.json();
+      })
+      .then((data: ProizvodnaJedinicaIdsResponse) => {
+        setJedinice(data);
+      })
+      .catch((err) => setError(err.message));
+  }, []);
 
   const fetchAlarmi = () => {
     if (!idJedinice || !dan || !vremeOd || !vremeDo) {
@@ -36,7 +54,7 @@ export default function Alarmi() {
     setError(null);
 
     fetch(
-      `http://localhost:5161/api/Alarm/po_jedinici` +
+      `http://localhost:7025/api/Alarm/po_jedinici` +
         `?idJedinice=${idJedinice}` +
         `&dan=${dan}` +
         `&vremeOd=${vremeOd}:00` +
@@ -58,12 +76,17 @@ export default function Alarmi() {
       <div className="alarmi-Forma">
         <div className="alarmi-Polje">
           <label>ID proizvodne jedinice</label>
-          <input
-            className="alarmiInput"
+          <select
             value={idJedinice}
             onChange={(e) => setIdJedinice(e.target.value)}
-            placeholder="GUID jedinice"
-          />
+          >
+            <option value="">Izaberi ID jedinice</option>
+            {proizvodneJedinice.map((id) => (
+              <option key={id} value={id}>
+                {id}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="alarmi-Polje">

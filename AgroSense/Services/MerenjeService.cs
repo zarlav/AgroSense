@@ -1,5 +1,4 @@
-﻿using AgroSense.Domain;
-using AgroSense.DTOs.Merenje;
+﻿using AgroSense.DTOs.Merenje;
 using AgroSense.Repositories.Merenja;
 using Cassandra;
 
@@ -37,7 +36,7 @@ namespace AgroSense.Services
                 await PoDanu.DodajMerenja(m);
                 await PoLokaciji.DodajMerenja(m);
                 await PoslednjaVrednost.DodajMerenja(m);;
-                await AlarmSer.ProveriAlarm(m.Id_lokacije, true);
+                await AlarmSer.ProveriAlarm(m.Id_lokacije, true, m.Ts);
             }
             catch (Exception ex)
             {

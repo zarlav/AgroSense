@@ -1,5 +1,4 @@
-﻿using AgroSense.Domain;
-using AgroSense.Services;
+﻿using AgroSense.Services;
 using Cassandra;
 using AgroSense.DTOs.Merenje;
 using System.Threading.Tasks;
