@@ -138,8 +138,13 @@ CREATE TABLE IF NOT EXISTS agrosense.senzor_podatak_po_danu (
 )WITH CLUSTERING ORDER BY (ts DESC);
 
 CREATE TABLE IF NOT EXISTS agrosense.senzor_poslednja_vrednost (
+<<<<<<< HEAD
     id_lokacije uuid,
     id_senzora uuid PRIMARY KEY,
+=======
+    id_lokacije uuid PRIMARY KEY,
+    id_senzora uuid,
+>>>>>>> 6aadb4e0c766cb76f5330672c36a8515c4a1d2c4
     dan date,
     ts timestamp,
     temperatura float,
@@ -170,4 +175,8 @@ CREATE TABLE agrosense.senzor_podatak_po_lokaciji (
     pritisak_vazduha float,
     pritisak_u_cevima float,
     PRIMARY KEY ((id_lokacije, dan), ts, id_senzora)
+<<<<<<< HEAD
 ) WITH CLUSTERING ORDER BY (ts DESC, id_senzora ASC);
+=======
+) WITH CLUSTERING ORDER BY (ts DESC, id_senzora ASC);
+>>>>>>> 6aadb4e0c766cb76f5330672c36a8515c4a1d2c4
