@@ -30,12 +30,12 @@ export default function Alarmi() {
   const [proizvodneJedinice, setJedinice] =
     useState<ProizvodnaJedinicaIdsResponse>([]);
 
-
+ 
   useEffect(() => {
-    fetch("https://localhost:7025/api/ProizvodneJedinice/ids")
+    fetch("https://localhost:7025/api/ProizvodnaJedinica/ids")
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Greska pri ucitavanju ID-jeva proizvodnih jedinica");
+          throw new Error("Greška pri učitavanju ID-jeva proizvodnih jedinica");
         }
         return res.json();
       })
@@ -122,7 +122,7 @@ export default function Alarmi() {
         </button>
       </div>
 
-      {loading && <p className="alarmi-loading">Ucitavanje...</p>}
+      {loading && <p className="alarmi-loading">Učitavanje...</p>}
       {error && <p className="alarmi-error">{error}</p>}
 
       {alarmi.length > 0 && (
