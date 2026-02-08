@@ -1,11 +1,11 @@
-CREATE TABLE IF NOT EXISTS agrosense.proizvodne_jedinice (
+CREATE TABLE agrosense.proizvodne_jedinice (
     tip_jedinice text,
-    id_jedinice uuid,
     aktivno boolean,
+    id_jedinice uuid,
     datum_postavljanja timestamp,
     geo_lat double,
     geo_long double,
-    granica_co2_max float, 
+    granica_co2_max float,
     granica_co2_min float,
     granica_jacina_vetra_max float,
     granica_jacina_vetra_min float,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS agrosense.proizvodne_jedinice (
     granica_pritisak_u_cevima_min float,
     granica_pritisak_vazduha_max float,
     granica_pritisak_vazduha_min float,
-    granica_svetlost_max float, 
+    granica_svetlost_max float,
     granica_svetlost_min float,
     granica_temp_max float,
     granica_temp_min float,
@@ -22,46 +22,46 @@ CREATE TABLE IF NOT EXISTS agrosense.proizvodne_jedinice (
     granica_vlaznost_max float,
     granica_vlaznost_min float,
     nadmorska_visina double,
-    naziv text, 
+    naziv text,
     odgovorno_lice text,
     opis text,
     povrsina float,
     status_mreze text,
     vrsta_biljaka text,
-    PRIMARY KEY ((tip_jedinice, aktivno), id_jedinice));
+    PRIMARY KEY ((tip_jedinice, aktivno), id_jedinice)
+) WITH CLUSTERING ORDER BY (id_jedinice ASC)
+
 
 CREATE TABLE agrosense.proizvodne_jedinice_aktivne (
-    tip_jedinice text,
     aktivno boolean,
     id_jedinice uuid,
+    tip_jedinice text,
     PRIMARY KEY (aktivno, id_jedinice)
-);
+) WITH CLUSTERING ORDER BY (id_jedinice ASC)
 
-CREATE TABLE IF NOT EXISTS agrosense.alarmi (
-    id_jedinice UUID,
+CREATE TABLE agrosense.alarmi (
+    id_jedinice uuid,
     dan date,
     vreme_dogadjaja timestamp,
     id_alarma timeuuid,
-    id_senzora UUID,
-    parametar TEXT,
-    trenutna_vrednost DOUBLE,
-    granicna_vrednostmin DOUBLE,
-    granicna_vrednostmax DOUBLE,
-    komentar TEXT,
+    granicna_vrednostmax double,
+    granicna_vrednostmin double,
+    id_senzora uuid,
+    komentar text,
+    parametar text,
+    trenutna_vrednost double,
     PRIMARY KEY ((id_jedinice, dan), vreme_dogadjaja, id_alarma)
-)
-WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC);
+) WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC, id_alarma ASC)
 
 CREATE TABLE agrosense.alarmi_po_senzoru (
-    id_senzora UUID,
-    id_alarma timeuuid, 
-    dan DATE,
-    vreme_dogadjaja TIMESTAMP,
-    id_jedinice UUID,
-    komentar TEXT,
-PRIMARY KEY ((id_senzora, dan), vreme_dogadjaja, id_alarma)
-)
-WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC, id_alarma DESC);
+    id_senzora uuid,
+    dan date,
+    vreme_dogadjaja timestamp,
+    id_alarma timeuuid,
+    id_jedinice uuid,
+    komentar text,
+    PRIMARY KEY ((id_senzora, dan), vreme_dogadjaja, id_alarma)
+) WITH CLUSTERING ORDER BY (vreme_dogadjaja DESC, id_alarma DESC)
 
 CREATE TABLE agrosense.korisnik (
     id_korisnika UUID PRIMARY KEY,
@@ -78,33 +78,33 @@ CREATE TABLE agrosense.korisnik_po_jedinici (
 );
 
 
-CREATE TABLE IF NOT EXISTS agrosense.senzor_podatak_po_danu (
-    id_senzora UUID,
-    dan DATE,
-    ts TIMESTAMP,
-    temperatura FLOAT,
-    vlaznost FLOAT,
-    co2 FLOAT,
-    jacina_vetra FLOAT,
-    smer_vetra TEXT,
-    ph_zemljista FLOAT,
-    uv_vrednost FLOAT,
-    vlaznost_lista FLOAT,
-    pritisak_vazduha FLOAT,
-    pritisak_u_cevima FLOAT,
-
-    PRIMARY KEY((id_senzora , dan), ts)
+CREATE TABLE agrosense.senzor_podatak_po_danu (
+    id_senzora uuid,
+    dan date,
+    ts timestamp,
+    co2 float,
+    id_lokacije uuid,
+    jacina_vetra float,
+    ph_zemljista float,
+    pritisak_u_cevima float,
+    pritisak_vazduha float,
+    smer_vetra text,
+    temperatura float,
+    uv_vrednost float,
+    vlaznost float,
+    vlaznost_lista float,
+    PRIMARY KEY ((id_senzora, dan), ts)
 ) WITH CLUSTERING ORDER BY (ts DESC);
 
 
-CREATE TABLE IF NOT EXISTS agrosense.senzor (
-    id_senzora UUID PRIMARY KEY,
-    id_lokacije UUID,
-    naziv TEXT,
-    proizvodjac TEXT,
-    model TEXT,
-    status TEXT,
-    vreme_instalacije TIMESTAMP,
+CREATE TABLE agrosense.senzor (
+    id_senzora uuid PRIMARY KEY,
+    id_lokacije uuid,
+    model text,
+    naziv text,
+    proizvodjac text,
+    status text,
+    vreme_instalacije timestamp
 );
 CREATE TABLE IF NOT EXISTS agrosense.senzor_po_lokaciji (
     id_lokacije uuid,
@@ -118,65 +118,37 @@ CREATE TABLE IF NOT EXISTS agrosense.senzor_po_lokaciji (
 ) WITH CLUSTERING ORDER BY (id_senzora ASC);
 
 
-CREATE TABLE IF NOT EXISTS agrosense.senzor_podatak_po_danu (
-    id_senzora UUID,
-    id_lokacije UUID,
-    dan DATE,
-    ts TIMESTAMP,
-    temperatura FLOAT,
-    vlaznost FLOAT,
-    co2 FLOAT,
-    jacina_vetra FLOAT,
-    smer_vetra TEXT,
-    ph_zemljista FLOAT,
-    uv_vrednost FLOAT,
-    vlaznost_lista FLOAT,
-    pritisak_vazduha FLOAT,
-    pritisak_u_cevima FLOAT,
-
-    PRIMARY KEY ((dan,id_lokacije), ts, id_senzora)
-)WITH CLUSTERING ORDER BY (ts DESC);
-
-CREATE TABLE IF NOT EXISTS agrosense.senzor_poslednja_vrednost (
-<<<<<<< HEAD
-    id_lokacije uuid,
+CREATE TABLE agrosense.senzor_poslednja_vrednost (
     id_senzora uuid PRIMARY KEY,
-=======
-    id_lokacije uuid PRIMARY KEY,
-    id_senzora uuid,
->>>>>>> 6aadb4e0c766cb76f5330672c36a8515c4a1d2c4
-    dan date,
-    ts timestamp,
-    temperatura float,
-    vlaznost float,
     co2 float,
+    dan date,
+    id_lokacije uuid,
     jacina_vetra float,
-    smer_vetra text,
     ph_zemljista float,
-    uv_vrednost float,
-    vlaznost_lista float,
+    pritisak_u_cevima float,
     pritisak_vazduha float,
-    pritisak_u_cevima float
-);  
+    smer_vetra text,
+    temperatura float,
+    ts timestamp,
+    uv_vrednost float,
+    vlaznost float,
+    vlaznost_lista float
+);
 
 CREATE TABLE agrosense.senzor_podatak_po_lokaciji (
     id_lokacije uuid,
-    id_senzora uuid,
     dan date,
     ts timestamp,
-    temperatura float,
-    vlaznost float,
+    id_senzora uuid,
     co2 float,
     jacina_vetra float,
-    smer_vetra text,
     ph_zemljista float,
-    uv_vrednost float,
-    vlaznost_lista float,
-    pritisak_vazduha float,
     pritisak_u_cevima float,
+    pritisak_vazduha float,
+    smer_vetra text,
+    temperatura float,
+    uv_vrednost float,
+    vlaznost float,
+    vlaznost_lista float,
     PRIMARY KEY ((id_lokacije, dan), ts, id_senzora)
-<<<<<<< HEAD
-) WITH CLUSTERING ORDER BY (ts DESC, id_senzora ASC);
-=======
-) WITH CLUSTERING ORDER BY (ts DESC, id_senzora ASC);
->>>>>>> 6aadb4e0c766cb76f5330672c36a8515c4a1d2c4
+) WITH CLUSTERING ORDER BY (ts DESC, id_senzora ASC)
