@@ -30,11 +30,12 @@ export default function Alarmi() {
   const [proizvodneJedinice, setJedinice] =
     useState<ProizvodnaJedinicaIdsResponse>([]);
 
+
   useEffect(() => {
-    fetch("https://localhost:7025/api/Senzor/svi_senzori")
+    fetch("https://localhost:7025/api/ProizvodneJedinice/ids")
       .then((res) => {
         if (!res.ok) {
-          throw new Error("Greška pri očitavanju ID-jeva parcela!");
+          throw new Error("Greska pri ucitavanju ID-jeva proizvodnih jedinica");
         }
         return res.json();
       })
@@ -54,7 +55,7 @@ export default function Alarmi() {
     setError(null);
 
     fetch(
-      `http://localhost:7025/api/Alarm/po_jedinici` +
+      `https://localhost:7025/api/Alarm/po_jedinici` +
         `?idJedinice=${idJedinice}` +
         `&dan=${dan}` +
         `&vremeOd=${vremeOd}:00` +
@@ -75,12 +76,12 @@ export default function Alarmi() {
 
       <div className="alarmi-Forma">
         <div className="alarmi-Polje">
-          <label>ID proizvodne jedinice</label>
+          <label>Proizvodna jedinica</label>
           <select
             value={idJedinice}
             onChange={(e) => setIdJedinice(e.target.value)}
           >
-            <option value="">Izaberi ID jedinice</option>
+            <option value="">Izaberi jedinicu</option>
             {proizvodneJedinice.map((id) => (
               <option key={id} value={id}>
                 {id}
@@ -92,7 +93,6 @@ export default function Alarmi() {
         <div className="alarmi-Polje">
           <label>Datum</label>
           <input
-            className="alarmiInput"
             type="date"
             value={dan}
             onChange={(e) => setDan(e.target.value)}
@@ -102,7 +102,6 @@ export default function Alarmi() {
         <div className="alarmi-Polje">
           <label>Vreme od</label>
           <input
-            className="alarmiInput"
             type="time"
             value={vremeOd}
             onChange={(e) => setVremeOd(e.target.value)}
@@ -112,7 +111,6 @@ export default function Alarmi() {
         <div className="alarmi-Polje">
           <label>Vreme do</label>
           <input
-            className="alarmiInput"
             type="time"
             value={vremeDo}
             onChange={(e) => setVremeDo(e.target.value)}
@@ -124,36 +122,34 @@ export default function Alarmi() {
         </button>
       </div>
 
-      {loading && <p className="alarmi-loading">Učitavanje...</p>}
+      {loading && <p className="alarmi-loading">Ucitavanje...</p>}
       {error && <p className="alarmi-error">{error}</p>}
 
       {alarmi.length > 0 && (
-        <div className="alarmi-table-wrapper">
-          <table className="alarmi-table">
-            <thead>
-              <tr>
-                <th>Parametar</th>
-                <th>Trenutna</th>
-                <th>Min</th>
-                <th>Max</th>
-                <th>Vreme</th>
-                <th>Komentar</th>
+        <table className="alarmi-table">
+          <thead>
+            <tr>
+              <th>Parametar</th>
+              <th>Trenutna</th>
+              <th>Min</th>
+              <th>Max</th>
+              <th>Vreme</th>
+              <th>Komentar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {alarmi.map((a, i) => (
+              <tr key={i}>
+                <td>{a.parametar}</td>
+                <td>{a.trenutna_vrednost}</td>
+                <td>{a.granicna_vrednostMin}</td>
+                <td>{a.granicna_vrednostMax}</td>
+                <td>{new Date(a.vreme_dogadjaja).toLocaleString()}</td>
+                <td>{a.komentar}</td>
               </tr>
-            </thead>
-            <tbody>
-              {alarmi.map((a, i) => (
-                <tr key={i}>
-                  <td>{a.parametar}</td>
-                  <td>{a.trenutna_vrednost}</td>
-                  <td>{a.granicna_vrednostMin}</td>
-                  <td>{a.granicna_vrednostMax}</td>
-                  <td>{new Date(a.vreme_dogadjaja).toLocaleString()}</td>
-                  <td>{a.komentar}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       )}
     </div>
   );
